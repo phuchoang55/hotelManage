@@ -1,10 +1,14 @@
 package com.hotelmanage.entity;
 
+import com.hotelmanage.entity.Enum.UserRole;
+import com.hotelmanage.entity.Enum.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "User")
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +18,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Integer userId;
+    private Long userId;
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
@@ -22,22 +26,20 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
-
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "phone", nullable = false, unique = true, length = 20)
-    private String phone;
+    @Column(name = "avatar_url", length = 1000)
+    private String avatarUrl;
 
-    @Column(name = "address")
-    private String address;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role_id", nullable = false)
+    private UserRole roleId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Boolean status = false;
+    private UserStatus status;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }
