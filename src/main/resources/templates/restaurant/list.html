@@ -1,0 +1,25 @@
+<div th:replace="~{fragments/header :: _}"></div>
+<section>
+    <h1>Danh sách Nhà hàng</h1>
+    <div class="grid">
+        <div class="card" th:each="r : ${restaurants}">
+            <img th:src="${r.imageUrl} ?: @{/images/placeholder-restaurant.svg}"
+                 th:alt="${r.name}"
+                 onerror="this.onerror=null; this.src='/images/placeholder-restaurant.svg';" />
+            <div class="card-body">
+                <h3 class="title" th:text="${r.name}">Tên nhà hàng</h3>
+                <div class="meta-row">
+                    <span class="icon">🍽️</span>
+                    <span th:text="${r.cuisineType} ?: 'Đang cập nhật'"></span>
+                </div>
+                <div class="meta-row">
+                    <span class="icon">⏰</span>
+                    <span th:text="${r.openingHours} ?: 'Đang cập nhật'"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:if="${#lists.isEmpty(restaurants)}">Chưa có nhà hàng.</div>
+
+</section>
+<div th:replace="~{fragments/footer :: _}"></div>
