@@ -1,43 +1,63 @@
 package com.hotelmanage.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
 
-@Entity
-@Table(name = "User")
-@Data
+import com.hotelmanage.entity.Enum.UserRole;
+import com.hotelmanage.entity.Enum.UserStatus;
+import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@SQLDelete(sql = "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE user_id = ?")
+@Where(clause = "deleted_at IS NULL")
+@Entity
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_users_username", columnNames = {"username"}),
+        @UniqueConstraint(name = "uk_users_email", columnNames = {"email"})
+})
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Integer userId;
+    @EqualsAndHashCode.Include
+    Long id;
 
-    @Column(name = "username", nullable = false, unique = true)
-    private String username;
+    @Column(name = "username", nullable = false, length = 255)
+    String username;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "password", nullable = false, length = 255)
+    String password;
 
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
+    @Column(name = "email", nullable = false, length = 255)
+    String email;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+    @Column(name = "avatar_url", length = 1000)
+    String avatarUrl;
 
-    @Column(name = "phone", nullable = false, unique = true, length = 20)
-    private String phone;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role_id", nullable = false, length = 32)
+    UserRole role;
 
-    @Column(name = "address")
-    private String address;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 16)
+    UserStatus status;
 
-    @Column(name = "status", nullable = false)
-    private Boolean status = false;
+    @Column(name = "deleted_at")
+    LocalDateTime deletedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
 }
+
+

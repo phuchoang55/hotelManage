@@ -17,32 +17,5 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(Integer id) {
-        return userRepository.findById(id);
-    }
-
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    public List<User> getUsersByStatus(Boolean status) {
-        return userRepository.findByStatus(status);
-    }
-
-    public List<User> getUsersByRoleId(Integer roleId) {
-        return userRepository.findByRole_RoleId(roleId);
-    }
-
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public void deleteUser(Integer id) {
-        userRepository.deleteById(id);
-    }
 }
 
