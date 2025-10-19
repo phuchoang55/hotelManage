@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Amenities</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<header class="header">
+    <h1>Hotel Amenities</h1>
+</header>
+
+<section class="amenities-section">
+    <div class="amenities-container">
+        <div th:each="a : ${amenities}" class="amenity-card">
+            <img th:src="${a.image}" alt="Amenity Image">
+            <h3 th:text="${a.name}"></h3>
+            <p class="desc" th:text="${a.desc}"></p>
+            <p class="time">🕓 <span th:text="${a.time}"></span></p>
+            <button class="view-btn">View</button>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2025 Hotel Management System</p>
+</footer>
+</body>
+</html>
