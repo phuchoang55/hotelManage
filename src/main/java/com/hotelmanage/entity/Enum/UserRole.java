@@ -1,8 +1,9 @@
 package com.hotelmanage.entity.Enum;
 
+
 public enum UserRole {
-    GUEST,
+    ADMIN,
     CUSTOMER,
-    RECEPTIONIST,
-    ADMIN
+    GUEST,
+    RECEPTIONIST
 }
