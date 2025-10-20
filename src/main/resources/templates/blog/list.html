@@ -1,0 +1,18 @@
+<div th:replace="~{fragments/header :: _}"></div>
+<section>
+    <h1>Danh sách Blog</h1>
+    <div class="grid">
+        <div class="card" th:each="b : ${blogs}">
+            <img th:src="${b.imageUrl} ?: @{/images/placeholder-blog.svg}"
+                 th:alt="${b.title}"
+                 onerror="this.onerror=null; this.src='/images/placeholder-blog.svg';" />
+            <div class="card-body">
+                <h3 th:text="${b.title}">Tiêu đề</h3>
+            </div>
+        </div>
+    </div>
+    <div th:if="${#lists.isEmpty(blogs)}">Chưa có bài viết.</div>
+</section>
+<div th:replace="~{fragments/footer :: _}"></div>
+
+
