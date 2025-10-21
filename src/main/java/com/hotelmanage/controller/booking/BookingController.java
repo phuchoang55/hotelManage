@@ -5,6 +5,7 @@ import com.hotelmanage.entity.booking.Booking;
 import com.hotelmanage.entity.booking.Promotion;
 import com.hotelmanage.entity.room.Room;
 import com.hotelmanage.entity.room.RoomType;
+import com.hotelmanage.repository.UserRepository;
 import com.hotelmanage.service.booking.BookingService;
 import com.hotelmanage.service.booking.PromotionService;
 import com.hotelmanage.service.room.RoomService;
@@ -31,6 +32,7 @@ public class BookingController {
     private final RoomService roomService;
     private final BookingService bookingService;
     private final PromotionService promotionService;
+    private final UserRepository userRepository;
 
     @GetMapping("/search")
     public String searchRooms(@RequestParam(required = false) LocalDate checkInDate,
@@ -82,9 +84,17 @@ public class BookingController {
                              @RequestParam LocalDate checkOutDate,
                              @RequestParam Integer amountPerson,
                              @RequestParam(required = false) String promotionCode,
+                             Principal principal,
                              Model model) {
 
         RoomType roomType = roomTypeService.findById(roomTypeId);
+
+        // Thêm thông tin user nếu đã đăng nhập
+        if (principal != null) {
+            User currentUser = userRepository.findByUsername(principal.getName())
+                    .orElse(null);
+            model.addAttribute("currentUser", currentUser);
+        }
 
         model.addAttribute("roomType", roomType);
         model.addAttribute("checkInDate", checkInDate);
@@ -95,12 +105,14 @@ public class BookingController {
         return "booking/room-detail";
     }
 
+
     @PostMapping("/select-room")
     public String selectRoom(@RequestParam Integer roomTypeId,
                              @RequestParam LocalDate checkInDate,
                              @RequestParam LocalDate checkOutDate,
                              @RequestParam Integer amountPerson,
                              @RequestParam(required = false) String promotionCode,
+                             Principal principal,
                              Model model) {
 
         RoomType selectedRoomType = roomTypeService.findById(roomTypeId);
@@ -121,6 +133,13 @@ public class BookingController {
             }
         }
 
+        // Thêm thông tin user nếu đã đăng nhập
+        if (principal != null) {
+            User currentUser = userRepository.findByUsername(principal.getName())
+                    .orElse(null);
+            model.addAttribute("currentUser", currentUser);
+        }
+
         model.addAttribute("currentStep", 2);
         model.addAttribute("selectedRoomType", selectedRoomType);
         model.addAttribute("checkInDate", checkInDate);
@@ -134,6 +153,7 @@ public class BookingController {
 
         return "booking/booking-form";
     }
+
 
     @PostMapping("/confirm")
     public String confirmBooking(@RequestParam Integer roomTypeId,

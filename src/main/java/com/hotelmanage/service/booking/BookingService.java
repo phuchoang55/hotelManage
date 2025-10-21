@@ -151,7 +151,7 @@ public class BookingService {
                             .username("guest_" + customerEmail.split("@")[0] + "_" + System.currentTimeMillis())
                             .password("") // Password trống
                             .email(customerEmail)
-                            .roleId(UserRole.GUEST)
+                            .role(UserRole.GUEST)
                             .status(UserStatus.INACTIVE)
                             .build();
 

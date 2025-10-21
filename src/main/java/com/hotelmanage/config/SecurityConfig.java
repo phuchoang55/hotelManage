@@ -42,6 +42,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/login", "/register", "/restaurants", "/blogs").permitAll()
+                        .requestMatchers("/booking/**", "/home", "/amenities").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/js/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -109,7 +110,7 @@ public class SecurityConfig {
                     redirectUrl = "/reception";
                     break;
                 } else if ("ROLE_CUSTOMER".equals(role)) {
-                    redirectUrl = "/customer";
+                    redirectUrl = "/home";
                     break;
                 }
             }

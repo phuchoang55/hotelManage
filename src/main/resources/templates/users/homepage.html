@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hoi An Hotel | Live Oriental Heritage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -60,30 +63,6 @@
             color: #333;
         }
 
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 5px 10px;
-        }
-
-        .search-bar input {
-            border: none;
-            background: transparent;
-            color: #fff;
-            outline: none;
-            padding: 5px;
-        }
-
-        .search-bar button {
-            background: transparent;
-            border: none;
-            color: #f9c74f;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
         .btn-primary {
             padding: 10px 25px;
             border: 1px solid #f9c74f;
@@ -99,7 +78,23 @@
             background: #d4a017;
         }
 
-        /* HERO SLIDER */
+        .auth {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auth .btn {
+            padding: 8px 20px;
+            background: #f9c74f;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
         .hero {
             height: 100vh;
             position: relative;
@@ -179,7 +174,6 @@
             width: 200px;
         }
 
-        /* SECTIONS */
         section {
             padding: 80px 100px;
             text-align: center;
@@ -194,8 +188,7 @@
         .about,
         .rooms,
         .dining,
-        .amenities,
-        .testimonials {
+        .amenities {
             background: #f9f9f9;
             margin-bottom: 20px;
             border-radius: 12px;
@@ -257,31 +250,13 @@
             .booking-form {
                 flex-direction: column;
             }
-
-            .search-bar {
-                margin-top: 10px;
-            }
         }
     </style>
 </head>
 <body>
 
-<header id="navbar">
-    <div class="logo">Hoi An Hotel</div>
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#roomtype">Room Type</a>
-        <a href="#dining">Dining</a>
-        <a href="#amenities">Amenities</a>
-        <a href="#contact" class="btn-primary">Book Now</a>
-        <div class="search-bar">
-            <input type="text" placeholder="Search..."/>
-            <button>🔍</button>
-        </div>
-    </nav>
-</header>
+<div th:replace="~{fragments/header :: header}"></div>
 
-<!-- HERO SLIDER SECTION -->
 <section class="hero" id="home">
     <div class="slider">
         <div class="slide active"
@@ -297,19 +272,31 @@
     <div class="hero-content">
         <h1>Hoi An Hotel</h1>
         <p>Live Oriental Heritage</p>
-        <div class="booking-form">
-            <input type="date" placeholder="Check-in"/>
-            <input type="date" placeholder="Check-out"/>
-            <select>
-                <option>Adults</option>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-            </select>
-            <button class="btn-primary">Book</button>
-        </div>
-    </div>
+            <div class="booking-form">
+                <form th:action="@{/booking/search}" method="get">
+
+                            <input type="date" class="form-control" id="checkInDate" name="checkInDate"
+                                   th:value="${checkInDate}" required>
+
+                            <input type="date" class="form-control" id="checkOutDate" name="checkOutDate"
+                                   th:value="${checkOutDate}" required>
+                            <label for="amountPerson" class="form-label">
+                                <i class="bi bi-people"></i>
+                            </label>
+                            <select class="form-select" id="amountPerson" name="amountPerson" required>
+                                <option value="">Chọn</option>
+                                <option th:value="1" th:selected="${amountPerson == 1}">1 người</option>
+                                <option th:value="2" th:selected="${amountPerson == 2}">2 người</option>
+                                <option th:value="3" th:selected="${amountPerson == 3}">3 người</option>
+                                <option th:value="4" th:selected="${amountPerson == 4}">4 người</option>
+                            </select>
+
+                            <button type="submit" class="btn-primary">
+                                Tìm kiếm
+                            </button>
+                    </div>
+                </form>
+            </div>
 </section>
 
 <section class="about">
@@ -352,23 +339,15 @@
     </div>
 </section>
 
-<footer id="contact">
-    <h2>Contact Us</h2>
-    <p>Address: 12 Phan Chu Trinh, Hoi An, Quang Nam</p>
-    <p>Phone: (+84) 235 3 861 461</p>
-    <p>Email: info@hoianhotel.vn</p>
-    <p>&copy; 2025 Hoi An Hotel. All rights reserved.</p>
-</footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script>
-    // Navbar scroll color change
     window.addEventListener("scroll", () => {
         const nav = document.getElementById("navbar");
         if (window.scrollY > 100) nav.classList.add("scrolled");
         else nav.classList.remove("scrolled");
     });
 
-    // Hero slider
     const slides = document.querySelectorAll(".slide");
     let index = 0;
 
@@ -379,6 +358,34 @@
     }
 
     setInterval(showNextSlide, 5000);
+
+    document.getElementById('searchForm')?.addEventListener('submit', function(e) {
+        const checkIn = new Date(document.getElementById('checkInDate').value);
+        const checkOut = new Date(document.getElementById('checkOutDate').value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (checkIn < today) {
+            e.preventDefault();
+            alert('Ngày nhận phòng phải từ hôm nay trở đi');
+            return;
+        }
+
+        if (checkOut <= checkIn) {
+            e.preventDefault();
+            alert('Ngày trả phòng phải sau ngày nhận phòng');
+            return;
+        }
+    });
+
+    // Set min date
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('checkInDate')?.setAttribute('min', today);
+
+    document.getElementById('checkInDate')?.addEventListener('change', function() {
+        const checkInDate = this.value;
+        document.getElementById('checkOutDate')?.setAttribute('min', checkInDate);
+    });
 </script>
 </body>
 </html>

@@ -396,10 +396,18 @@
                            class="btn btn-outline-primary flex-grow-1">
                             <i class="bi bi-eye"></i> Xem Chi Tiết
                         </a>
-                        <button type="button" class="btn btn-success-custom flex-grow-1"
-                                th:onclick="'selectRoom(' + ${roomType.roomTypeId} + ')'">
-                            <i class="bi bi-check-circle"></i> Chọn Phòng
-                        </button>
+                        <form th:action="@{/booking/select-room}" method="post" class="flex-grow-1">
+                            <input type="hidden" name="roomTypeId" th:value="${roomType.roomTypeId}">
+                            <input type="hidden" name="checkInDate" th:value="${checkInDate}">
+                            <input type="hidden" name="checkOutDate" th:value="${checkOutDate}">
+                            <input type="hidden" name="amountPerson" th:value="${amountPerson}">
+                            <input type="hidden" name="promotionCode" th:value="${promotionCode}">
+
+                            <button type="submit" class="btn btn-success-custom w-100">
+                                <i class="bi bi-check-circle"></i> Chọn Phòng
+                            </button>
+                        </form>
+
                     </div>
                 </div>
             </div>
@@ -420,89 +428,132 @@
         <div class="booking-card">
             <h2 class="card-title"><i class="bi bi-person-fill"></i> Thông Tin Đặt Phòng</h2>
 
-            <form id="bookingForm" th:action="@{/booking/confirm}" method="get">
-                <!-- Hidden Fields - Sửa thành Integer -->
-                <input type="hidden" id="selectedRoomTypeId" name="roomTypeId" th:value="${selectedRoomType?.roomTypeId}">
+            <!-- Hiển thị thông tin user nếu đã đăng nhập -->
+            <div th:if="${currentUser != null}" class="alert alert-info mb-4">
+                <i class="bi bi-info-circle-fill"></i>
+                Bạn đang đăng nhập với tài khoản: <strong th:text="${currentUser.username}"></strong>
+            </div>
+
+            <form id="bookingForm" th:action="@{/booking/confirm}" method="post">
+                <!-- Hidden fields -->
+                <input type="hidden" name="roomTypeId" th:value="${selectedRoomType?.roomTypeId}">
                 <input type="hidden" name="checkInDate" th:value="${checkInDate}">
                 <input type="hidden" name="checkOutDate" th:value="${checkOutDate}">
                 <input type="hidden" name="amountPerson" th:value="${amountPerson}">
                 <input type="hidden" name="promotionCode" th:value="${promotionCode}">
 
-                <!-- Customer Information -->
-                <div class="row g-3 mb-4">
-                    <div class="col-12">
-                        <h4><i class="bi bi-person-badge"></i> Thông Tin Khách Hàng</h4>
+                <!-- Guest Information (chỉ hiện khi chưa đăng nhập) -->
+                <div th:if="${currentUser == null}" class="mb-4">
+                    <h5 class="mb-3"><i class="bi bi-person-badge"></i> Thông Tin Khách Hàng</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="customerName" class="form-label">
+                                Họ và Tên <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="customerName"
+                                   name="customerName" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="customerPhone" class="form-label">
+                                Số Điện Thoại <span class="text-danger">*</span>
+                            </label>
+                            <input type="tel" class="form-control" id="customerPhone"
+                                   name="customerPhone" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="customerEmail" class="form-label">
+                                Email <span class="text-danger">*</span>
+                            </label>
+                            <input type="email" class="form-control" id="customerEmail"
+                                   name="customerEmail" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="customerAddress" class="form-label">Địa Chỉ</label>
+                            <input type="text" class="form-control" id="customerAddress"
+                                   name="customerAddress">
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="customerName" class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="customerName" name="customerName" required>
+                </div>
+
+                <!-- Logged-in User Information (hiển thị khi đã đăng nhập) -->
+                <div th:if="${currentUser != null}" class="mb-4">
+                    <h5 class="mb-3"><i class="bi bi-person-check-fill"></i> Thông Tin Khách Hàng</h5>
+                    <div class="customer-info-display p-3 bg-light rounded">
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <strong>Tên tài khoản:</strong>
+                                <span th:text="${currentUser.username}"></span>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <strong>Email:</strong>
+                                <span th:text="${currentUser.email}"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="customerPhone" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
-                        <input type="tel" class="form-control" id="customerPhone" name="customerPhone"
-                               pattern="[0-9]{10}" required>
+                </div>
+
+                <!-- Room Information -->
+                <div class="mb-4">
+                    <h5 class="mb-3"><i class="bi bi-house-door-fill"></i> Thông Tin Phòng</h5>
+                    <div class="room-info-display p-3 bg-light rounded">
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <strong>Loại phòng:</strong>
+                                <span th:text="${selectedRoomType?.roomTypeName}"></span>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <strong>Số người:</strong>
+                                <span th:text="${amountPerson}"></span>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <strong>Ngày nhận phòng:</strong>
+                                <span th:text="${#temporals.format(checkInDate, 'dd/MM/yyyy')}"></span>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <strong>Ngày trả phòng:</strong>
+                                <span th:text="${#temporals.format(checkOutDate, 'dd/MM/yyyy')}"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="customerEmail" class="form-label">Email <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control" id="customerEmail" name="customerEmail" required>
-                    </div>
-                    <div class="col-12">
-                        <label for="customerAddress" class="form-label">Địa chỉ</label>
-                        <textarea class="form-control" id="customerAddress" name="customerAddress" rows="2"></textarea>
-                    </div>
-                    <div class="col-12">
-                        <label for="specialRequests" class="form-label">Yêu cầu đặc biệt</label>
-                        <textarea class="form-control" id="specialRequests" name="specialRequests"
-                                  rows="3" placeholder="Ví dụ: Tầng cao, giường đôi, không hút thuốc..."></textarea>
-                    </div>
+                </div>
+
+                <!-- Special Requests -->
+                <div class="mb-4">
+                    <label for="specialRequests" class="form-label">
+                        <i class="bi bi-chat-left-text"></i> Yêu Cầu Đặc Biệt
+                    </label>
+                    <textarea class="form-control" id="specialRequests" name="specialRequests"
+                              rows="3" placeholder="Nhập yêu cầu đặc biệt của bạn (nếu có)"></textarea>
                 </div>
 
                 <!-- Booking Summary -->
                 <div class="booking-summary">
-                    <h4 class="mb-3"><i class="bi bi-receipt"></i> Chi Tiết Đặt Phòng</h4>
-
+                    <h5 class="mb-3"><i class="bi bi-receipt"></i> Tổng Quan Đơn Hàng</h5>
                     <div class="summary-row">
-                        <span>Loại phòng:</span>
-                        <strong th:text="${selectedRoomType?.roomTypeName}"></strong>
-                    </div>
-                    <div class="summary-row">
-                        <span>Ngày nhận phòng:</span>
-                        <strong th:text="${checkInDate != null ? #temporals.format(checkInDate, 'dd/MM/yyyy') : ''}"></strong>
-                    </div>
-                    <div class="summary-row">
-                        <span>Ngày trả phòng:</span>
-                        <strong th:text="${checkOutDate != null ? #temporals.format(checkOutDate, 'dd/MM/yyyy') : ''}"></strong>
+                        <span>Giá phòng / đêm:</span>
+                        <strong th:text="${#numbers.formatDecimal(selectedRoomType?.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></strong>
                     </div>
                     <div class="summary-row">
                         <span>Số đêm:</span>
-                        <strong th:text="${numberOfNights != null ? numberOfNights + ' đêm' : ''}"></strong>
+                        <strong th:text="${numberOfNights}"></strong>
+                    </div>
+                    <div class="summary-row" th:if="${promotion != null}">
+                        <span>Giảm giá (<span th:text="${promotion.code}"></span>):</span>
+                        <strong class="text-success" th:text="'-' + ${#numbers.formatDecimal(discount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></strong>
                     </div>
                     <div class="summary-row">
-                        <span>Số người:</span>
-                        <strong th:text="${amountPerson != null ? amountPerson + ' người' : ''}"></strong>
-                    </div>
-                    <div class="summary-row">
-                        <span>Giá phòng/đêm:</span>
-                        <strong th:text="${selectedRoomType?.price != null ? #numbers.formatDecimal(selectedRoomType.price, 0, 'COMMA', 0, 'POINT') + 'đ' : ''}"></strong>
-                    </div>
-                    <div class="summary-row" th:if="${discount != null && discount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">
-                        <span>Giảm giá:</span>
-                        <strong class="text-success" th:text="'-' + ${#numbers.formatDecimal(discount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
-                    </div>
-                    <div class="summary-row">
-                        <span>TỔNG TIỀN:</span>
-                        <strong th:text="${totalAmount != null ? #numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT') + 'đ' : ''}"></strong>
+                        <span>Tổng tiền:</span>
+                        <strong class="text-danger" th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></strong>
                     </div>
                 </div>
 
-
                 <!-- Action Buttons -->
-                <div class="d-flex gap-3 mt-4">
-                    <button type="button" class="btn btn-secondary-custom" onclick="goBackToRoomSelection()">
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-secondary-custom" onclick="window.history.back()">
                         <i class="bi bi-arrow-left"></i> Quay Lại
                     </button>
-                    <button type="submit" class="btn btn-success-custom flex-grow-1">
-                        <i class="bi bi-credit-card"></i> Tiếp Tục Thanh Toán
+                    <button type="submit" class="btn btn-success-custom">
+                        <i class="bi bi-check-circle"></i> Xác Nhận Đặt Phòng
                     </button>
                 </div>
             </form>
@@ -512,7 +563,8 @@
 
 
 
-            </form>
+
+    </form>
         </div>
     </div>
 </div>

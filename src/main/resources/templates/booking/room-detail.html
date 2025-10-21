@@ -184,6 +184,42 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
         }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-success {
+            background-color: #d1e7dd;
+            border: 1px solid #badbcc;
+            color: #0f5132;
+        }
+
+        .alert-info {
+            background-color: #cff4fc;
+            border: 1px solid #b6effb;
+            color: #055160;
+        }
+
+        .alert i {
+            font-size: 18px;
+        }
+
+        .alert-link {
+            color: inherit;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        .alert-link:hover {
+            color: var(--primary-color);
+        }
+
     </style>
 </head>
 <body>
@@ -260,43 +296,51 @@
             </div>
 
             <!-- Booking Panel -->
-            <div class="col-lg-4">
-                <div class="booking-panel">
-                    <h4 style="margin-bottom: 20px; color: var(--primary-color);">
-                        <i class="bi bi-calendar-check"></i> Thông Tin Đặt Phòng
-                    </h4>
+            <div class="booking-panel">
+                <h3>Thông Tin Đặt Phòng</h3>
 
-                    <div class="booking-info">
-                        <div class="booking-info-item">
-                            <span><i class="bi bi-calendar-event"></i> Nhận phòng</span>
-                            <strong th:text="${#temporals.format(checkInDate, 'dd/MM/yyyy')}"></strong>
-                        </div>
-                        <div class="booking-info-item">
-                            <span><i class="bi bi-calendar-x"></i> Trả phòng</span>
-                            <strong th:text="${#temporals.format(checkOutDate, 'dd/MM/yyyy')}"></strong>
-                        </div>
-                        <div class="booking-info-item">
-                            <span><i class="bi bi-people"></i> Số người</span>
-                            <strong th:text="${amountPerson} + ' người'"></strong>
-                        </div>
-                        <div class="booking-info-item" th:if="${promotionCode != null and !promotionCode.isEmpty()}">
-                            <span><i class="bi bi-gift"></i> Mã khuyến mãi</span>
-                            <strong th:text="${promotionCode}"></strong>
-                        </div>
-                    </div>
-
-                    <form th:action="@{/booking/select-room}" method="post">
-                        <input type="hidden" name="roomTypeId" th:value="${roomType.roomTypeId}">
-                        <input type="hidden" name="checkInDate" th:value="${checkInDate}">
-                        <input type="hidden" name="checkOutDate" th:value="${checkOutDate}">
-                        <input type="hidden" name="amountPerson" th:value="${amountPerson}">
-                        <input type="hidden" name="promotionCode" th:value="${promotionCode}">
-                        <button type="submit" class="btn-book">
-                            <i class="bi bi-check-circle"></i> Đặt Phòng Ngay
-                        </button>
-                    </form>
+                <!-- Hiển thị thông báo nếu đã đăng nhập -->
+                <div th:if="${currentUser != null}" class="alert alert-success mb-3">
+                    <i class="bi bi-person-check-fill"></i>
+                    Đăng nhập với tài khoản: <strong th:text="${currentUser.username}"></strong>
                 </div>
+
+
+                <div class="booking-info">
+                    <div class="booking-info-item">
+                        <span><i class="bi bi-calendar-check"></i> Ngày nhận:</span>
+                        <strong th:text="${#temporals.format(checkInDate, 'dd/MM/yyyy')}"></strong>
+                    </div>
+                    <div class="booking-info-item">
+                        <span><i class="bi bi-calendar-x"></i> Ngày trả:</span>
+                        <strong th:text="${#temporals.format(checkOutDate, 'dd/MM/yyyy')}"></strong>
+                    </div>
+                    <div class="booking-info-item">
+                        <span><i class="bi bi-people"></i> Số người:</span>
+                        <strong th:text="${amountPerson} + ' người'"></strong>
+                    </div>
+                    <div class="booking-info-item">
+                        <span><i class="bi bi-tag"></i> Mã giảm giá:</span>
+                        <strong th:text="${promotionCode != null and promotionCode != ''} ? ${promotionCode} : 'Không có'"></strong>
+                    </div>
+                </div>
+
+                <form th:action="@{/booking/select-room}" method="post">
+                    <input type="hidden" name="roomTypeId" th:value="${roomType.roomTypeId}">
+                    <input type="hidden" name="checkInDate" th:value="${checkInDate}">
+                    <input type="hidden" name="checkOutDate" th:value="${checkOutDate}">
+                    <input type="hidden" name="amountPerson" th:value="${amountPerson}">
+                    <input type="hidden" name="promotionCode" th:value="${promotionCode}">
+
+                    <button type="submit" class="btn-book">
+                        <i class="bi bi-calendar-check"></i>
+                        <span th:text="${currentUser != null ? 'Tiếp Tục Đặt Phòng' : 'Đặt Phòng Ngay'}"></span>
+                    </button>
+                </form>
             </div>
+
+
+
         </div>
     </div>
 </div>
