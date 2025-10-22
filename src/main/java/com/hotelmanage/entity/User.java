@@ -3,6 +3,8 @@ package com.hotelmanage.entity;
 
 import com.hotelmanage.entity.Enum.UserRole;
 import com.hotelmanage.entity.Enum.UserStatus;
+import com.hotelmanage.entity.booking.Booking;
+import com.hotelmanage.entity.emailNotification.EmailNotification;
 import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -44,6 +46,12 @@ public class User {
     @Column(name = "email", nullable = false, length = 255)
     String email;
 
+    @Column(name = "phone", length = 32)
+    String phone;
+
+    @Column(name = "address", length = 500)
+    String address;
+
     @Column(name = "avatar_url", length = 1000)
     String avatarUrl;
 
@@ -57,6 +65,14 @@ public class User {
 
     @Column(name = "deleted_at")
     LocalDateTime deletedAt;
+
+    // Relationships
+    @OneToMany(mappedBy = "user")
+    Set<Booking> bookings = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    Set<EmailNotification> emailNotifications = new HashSet<>();
+
 
 }
 
