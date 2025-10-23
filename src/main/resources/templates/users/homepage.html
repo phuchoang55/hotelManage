@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hoi An Hotel | Live Oriental Heritage</title>
+    <title>Khách sạn Hội An | Di sản phương Đông sống động</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -270,72 +270,69 @@
     </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-        <h1>Hoi An Hotel</h1>
-        <p>Live Oriental Heritage</p>
-            <div class="booking-form">
-                <form th:action="@{/booking/search}" method="get">
+        <h1>Khách sạn Hội An</h1>
+        <p>Di sản phương Đông sống động</p>
+        <div class="booking-form">
+            <form th:action="@{/booking/search}" method="get">
+                <input type="date" class="form-control" id="checkInDate" name="checkInDate"
+                       th:value="${checkInDate}" required placeholder="Ngày nhận phòng">
 
-                            <input type="date" class="form-control" id="checkInDate" name="checkInDate"
-                                   th:value="${checkInDate}" required>
+                <input type="date" class="form-control" id="checkOutDate" name="checkOutDate"
+                       th:value="${checkOutDate}" required placeholder="Ngày trả phòng">
 
-                            <input type="date" class="form-control" id="checkOutDate" name="checkOutDate"
-                                   th:value="${checkOutDate}" required>
-                            <label for="amountPerson" class="form-label">
-                                <i class="bi bi-people"></i>
-                            </label>
-                            <select class="form-select" id="amountPerson" name="amountPerson" required>
-                                <option value="">Chọn</option>
-                                <option th:value="1" th:selected="${amountPerson == 1}">1 người</option>
-                                <option th:value="2" th:selected="${amountPerson == 2}">2 người</option>
-                                <option th:value="3" th:selected="${amountPerson == 3}">3 người</option>
-                                <option th:value="4" th:selected="${amountPerson == 4}">4 người</option>
-                            </select>
+                <label for="amountPerson" class="form-label">Số người:</label>
+                <select class="form-select" id="amountPerson" name="amountPerson" required>
+                    <option value="">Chọn</option>
+                    <option th:value="1" th:selected="${amountPerson == 1}">1 người</option>
+                    <option th:value="2" th:selected="${amountPerson == 2}">2 người</option>
+                    <option th:value="3" th:selected="${amountPerson == 3}">3 người</option>
+                    <option th:value="4" th:selected="${amountPerson == 4}">4 người</option>
+                </select>
 
-                            <button type="submit" class="btn-primary">
-                                Tìm kiếm
-                            </button>
-                    </div>
-                </form>
-            </div>
+                <button type="submit" class="btn-primary">
+                    Tìm phòng
+                </button>
+            </form>
+        </div>
+    </div>
 </section>
 
 <section class="about">
-    <h2>About Hoi An Hotel</h2>
-    <p>Discover the Oriental heritage in the heart of Hoi An Ancient Town. Our hotel offers elegant spaces with
-        traditional charm, perfect for leisure or business trips.</p>
+    <h2>Về khách sạn Hội An</h2>
+    <p>Khám phá nét di sản phương Đông giữa lòng phố cổ Hội An. Khách sạn của chúng tôi mang đến không gian thanh lịch, kết hợp giữa truyền thống và hiện đại — lý tưởng cho chuyến nghỉ dưỡng hoặc công tác.</p>
 </section>
 
 <section class="rooms" id="rooms">
-    <h2>Rooms</h2>
+    <h2>Phòng nghỉ</h2>
     <div class="grid">
         <div class="room"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c" alt="">
-            <h3>Deluxe Room</h3></div>
+            <h3>Phòng Deluxe</h3></div>
         <div class="room"><img src="https://images.unsplash.com/photo-1600585154207-6dc4e5a66f7d" alt="">
-            <h3>Suite Room</h3></div>
+            <h3>Phòng Suite</h3></div>
         <div class="room"><img src="https://images.unsplash.com/photo-1560067174-8947e934e6a0" alt="">
-            <h3>Family Room</h3></div>
+            <h3>Phòng Gia đình</h3></div>
     </div>
 </section>
 
 <section class="dining" id="dining">
-    <h2>Dining</h2>
+    <h2>Ẩm thực</h2>
     <div class="grid">
         <div class="dining-item"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836" alt="">
-            <h3>Hoi An Restaurant</h3></div>
+            <h3>Nhà hàng Hội An</h3></div>
         <div class="dining-item"><img src="https://images.unsplash.com/photo-1565958011705-44e21199e1f2" alt="">
-            <h3>Bar & Lounge</h3></div>
+            <h3>Quầy bar & Phòng chờ</h3></div>
     </div>
 </section>
 
 <section class="amenities" id="amenities">
-    <h2>Amenities</h2>
+    <h2>Tiện nghi</h2>
     <div class="grid">
         <div class="amenity"><img src="https://images.unsplash.com/photo-1559599238-1df2b56f63ae" alt="">
-            <h3>Swimming Pool</h3></div>
+            <h3>Hồ bơi</h3></div>
         <div class="amenity"><img src="https://images.unsplash.com/photo-1598970434795-0c54fe7c0642" alt="">
             <h3>Spa & Massage</h3></div>
         <div class="amenity"><img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461" alt="">
-            <h3>Fitness Center</h3></div>
+            <h3>Phòng tập thể hình</h3></div>
     </div>
 </section>
 
@@ -378,7 +375,7 @@
         }
     });
 
-    // Set min date
+    // Giới hạn ngày nhỏ nhất
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('checkInDate')?.setAttribute('min', today);
 

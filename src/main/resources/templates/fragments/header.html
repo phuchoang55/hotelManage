@@ -12,12 +12,12 @@
 <header id="navbar" th:fragment="header">
     <div class="logo">Hoi An Hotel</div>
     <nav>
-        <a th:href="@{/}">Home</a>
-        <a href="#roomtype">Room Type</a>
-        <a href="/restaurants">Dining</a>
-        <a href="/amenities">Amenities</a>
+        <a th:href="@{/}">TRANG CHỦ</a>
+        <a href="#roomtype">HẠNG PHÒNG</a>
+        <a href="/restaurants">ẨM THỰC</a>
+        <a href="/amenities">TIỆN NGHI</a>
         <a href="/blogs">Blog</a>
-        <a href="/booking/search" class="btn-primary">Book Now</a>
+        <a href="/booking/search" class="btn-primary">ĐẶT PHÒNG</a>
 
         <div class="auth">
             <span sec:authorize="isAuthenticated()">Xin chào, <b sec:authentication="name"></b></span>
