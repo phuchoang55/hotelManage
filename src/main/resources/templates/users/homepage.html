@@ -378,7 +378,7 @@
     // Giới hạn ngày nhỏ nhất
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('checkInDate')?.setAttribute('min', today);
-
+    document.getElementById('checkOutDate')?.setAttribute('min', today);
     document.getElementById('checkInDate')?.addEventListener('change', function() {
         const checkInDate = this.value;
         document.getElementById('checkOutDate')?.setAttribute('min', checkInDate);
