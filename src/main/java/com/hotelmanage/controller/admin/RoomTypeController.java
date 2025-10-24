@@ -8,10 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import lombok.extern.slf4j.Slf4j;
 import jakarta.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/admin/room-types")
 @RequiredArgsConstructor
@@ -81,19 +82,19 @@ public class RoomTypeController {
     /**
      * Xóa loại phòng (soft delete)
      */
-    @PostMapping("/{id}/delete")
+    @PostMapping("/delete/{id}")
     public String deleteRoomType(@PathVariable Integer id,
                                  RedirectAttributes redirectAttributes) {
         try {
             roomTypeService.delete(id);
             redirectAttributes.addFlashAttribute("success",
-                    "✅ Đã xóa loại phòng thành công!");
+                    "Đã xóa loại phòng thành công!");
         } catch (RuntimeException e) {
-            System.err.println("Error deleting room type: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error deleting room type: {}", e.getMessage(), e);
             redirectAttributes.addFlashAttribute("error",
-                    "❌ " + e.getMessage());
+                    "" + e.getMessage());
         }
         return "redirect:/admin/room-types";
     }
+
 }
