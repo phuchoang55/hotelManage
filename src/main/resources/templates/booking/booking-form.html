@@ -3,28 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đặt Phòng - Hotel Management</title>
+    <title>Đặt Phòng - Khách sạn Hội An</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
     <style>
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #3498db;
-            --accent-color: #e74c3c;
+            --accent-color: #f9c74f;
             --success-color: #27ae60;
             --light-bg: #ecf0f1;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #f9f9f9;
+            color: #333;
+            margin-top: 80px; /* Thay padding-top bằng margin-top */
             min-height: 100vh;
-            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
         }
 
         .booking-container {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .hidden {
+            display: none;
         }
 
         /* Progress Steps */
@@ -33,7 +45,7 @@
             border-radius: 15px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .steps {
@@ -64,8 +76,8 @@
         }
 
         .step.active .step-number {
-            background: var(--secondary-color);
-            color: white;
+            background: var(--accent-color);
+            color: #000;
         }
 
         .step.completed .step-number {
@@ -106,7 +118,7 @@
         .search-card, .booking-card {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             padding: 30px;
             margin-bottom: 30px;
         }
@@ -134,11 +146,11 @@
         }
 
         .form-control:focus, .form-select:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(249, 199, 79, 0.25);
         }
 
-        /* Room Selection */
+        /* Room Card */
         .room-type-card {
             border: 2px solid #e0e0e0;
             border-radius: 12px;
@@ -151,14 +163,9 @@
         }
 
         .room-type-card:hover {
-            border-color: var(--secondary-color);
-            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.3);
+            border-color: var(--accent-color);
+            box-shadow: 0 5px 20px rgba(249, 199, 79, 0.3);
             transform: translateY(-3px);
-        }
-
-        .room-type-card.selected {
-            border-color: var(--success-color);
-            background: #f0f9f4;
         }
 
         .room-image {
@@ -200,10 +207,18 @@
             border-top: 2px solid var(--accent-color);
         }
 
+        /* Info Display */
+        .customer-info-display,
+        .room-info-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
         /* Buttons */
         .btn-primary-custom {
-            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
-            color: white;
+            background: var(--accent-color);
+            color: #000;
             border: none;
             padding: 12px 40px;
             border-radius: 8px;
@@ -212,12 +227,13 @@
         }
 
         .btn-primary-custom:hover {
+            background: #d4a017;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            box-shadow: 0 5px 15px rgba(249, 199, 79, 0.4);
         }
 
         .btn-success-custom {
-            background: linear-gradient(135deg, var(--success-color), #229954);
+            background: var(--success-color);
             color: white;
             border: none;
             padding: 12px 40px;
@@ -227,6 +243,7 @@
         }
 
         .btn-success-custom:hover {
+            background: #229954;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
         }
@@ -246,11 +263,26 @@
             transform: translateY(-2px);
         }
 
-        .hidden {
-            display: none;
+        .btn-outline-primary {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
         }
 
+        .btn-outline-primary:hover {
+            background: var(--accent-color);
+            color: #000;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
+            body {
+                margin-top: 60px; /* Giảm margin cho mobile */
+            }
+
+            .booking-container {
+                padding: 10px;
+            }
+
             .room-type-card {
                 flex-direction: column;
             }
@@ -260,26 +292,27 @@
                 height: 200px;
             }
         }
-
-
     </style>
+
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}"></div>
+
 <div class="booking-container">
     <!-- Progress Steps -->
     <div class="progress-steps">
         <div class="steps">
-            <div class="step" id="step1" th:classappend="${currentStep >= 1} ? 'active' : ''">
+            <div class="step" th:classappend="${currentStep >= 1} ? 'active' : ''">
                 <div class="step-number">1</div>
                 <div class="step-title">Chọn Phòng</div>
                 <div class="step-line"></div>
             </div>
-            <div class="step" id="step2" th:classappend="${currentStep >= 2} ? 'active' : ''">
+            <div class="step" th:classappend="${currentStep >= 2} ? 'active' : ''">
                 <div class="step-number">2</div>
                 <div class="step-title">Đặt Phòng</div>
                 <div class="step-line"></div>
             </div>
-            <div class="step" id="step3" th:classappend="${currentStep >= 3} ? 'active' : ''">
+            <div class="step" th:classappend="${currentStep >= 3} ? 'active' : ''">
                 <div class="step-number">3</div>
                 <div class="step-title">Thanh Toán</div>
             </div>
@@ -314,9 +347,9 @@
                         </label>
                         <select class="form-select" id="amountPerson" name="amountPerson" required>
                             <option value="1" th:selected="${amountPerson == null or amountPerson == 1}">1 người</option>
-                            <option th:value="2" th:selected="${amountPerson == 2}">2 người</option>
-                            <option th:value="3" th:selected="${amountPerson == 3}">3 người</option>
-                            <option th:value="4" th:selected="${amountPerson == 4}">4 người</option>
+                            <option value="2" th:selected="${amountPerson == 2}">2 người</option>
+                            <option value="3" th:selected="${amountPerson == 3}">3 người</option>
+                            <option value="4" th:selected="${amountPerson == 4}">4 người</option>
                         </select>
                     </div>
                     <div class="col-md-6 col-lg-2">
@@ -334,13 +367,12 @@
                     </div>
                 </div>
             </form>
-
         </div>
 
+        <!-- Search Results -->
         <div class="search-card" th:if="${roomTypes != null && !roomTypes.empty}">
             <h2 class="card-title"><i class="bi bi-house-door"></i> Kết Quả Tìm Kiếm</h2>
 
-            <!-- Alert messages -->
             <div class="alert alert-info" th:if="${message}" th:text="${message}"></div>
             <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
 
@@ -355,14 +387,14 @@
                         <div>
                             <h3 th:text="${roomType.roomTypeName}" class="mb-2"></h3>
                             <div class="d-flex gap-2 flex-wrap">
-                        <span class="badge bg-success">
-                            <i class="bi bi-check-circle"></i>
-                            <span th:text="${roomType.availableCount}"></span> phòng trống
-                        </span>
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle"></i>
+                                    <span th:text="${roomType.availableCount}"></span> phòng trống
+                                </span>
                                 <span class="badge bg-info">
-                            <i class="bi bi-people-fill"></i>
-                            <span th:text="${roomType.amountPerson}"></span> người
-                        </span>
+                                    <i class="bi bi-people-fill"></i>
+                                    <span th:text="${roomType.amountPerson}"></span> người
+                                </span>
                             </div>
                         </div>
                         <div class="text-end">
@@ -373,15 +405,13 @@
                         </div>
                     </div>
 
-                    <p th:text="${roomType.description}" class="mb-3 text-truncate-3-lines"></p>
+                    <p th:text="${roomType.description}" class="mb-3"></p>
 
-                    <!-- Thiết bị -->
                     <div class="mb-2" th:if="${roomType.device != null && !#strings.isEmpty(roomType.device)}">
                         <strong><i class="bi bi-tv"></i> Thiết bị:</strong>
                         <span th:text="${roomType.device}" class="text-muted"></span>
                     </div>
 
-                    <!-- Tiện ích -->
                     <div class="mb-3" th:if="${roomType.utilities != null && !#strings.isEmpty(roomType.utilities)}">
                         <strong><i class="bi bi-star"></i> Tiện ích:</strong>
                         <span th:text="${roomType.utilities}" class="text-muted"></span>
@@ -389,10 +419,10 @@
 
                     <div class="d-flex gap-2">
                         <a th:href="@{/booking/room-detail/{id}(id=${roomType.roomTypeId},
-                    checkInDate=${checkInDate},
-                    checkOutDate=${checkOutDate},
-                    amountPerson=${amountPerson},
-                    promotionCode=${promotionCode})}"
+                            checkInDate=${checkInDate},
+                            checkOutDate=${checkOutDate},
+                            amountPerson=${amountPerson},
+                            promotionCode=${promotionCode})}"
                            class="btn btn-outline-primary flex-grow-1">
                             <i class="bi bi-eye"></i> Xem Chi Tiết
                         </a>
@@ -402,47 +432,43 @@
                             <input type="hidden" name="checkOutDate" th:value="${checkOutDate}">
                             <input type="hidden" name="amountPerson" th:value="${amountPerson}">
                             <input type="hidden" name="promotionCode" th:value="${promotionCode}">
-
                             <button type="submit" class="btn btn-success-custom w-100">
                                 <i class="bi bi-check-circle"></i> Chọn Phòng
                             </button>
                         </form>
-
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Hiển thị khi không có kết quả -->
+        <!-- No Results -->
         <div class="search-card" th:if="${checkInDate != null && (roomTypes == null || roomTypes.empty)}">
             <div class="alert alert-warning text-center">
                 <i class="bi bi-exclamation-triangle fs-1"></i>
-                <h4 class="mt-3"><strong>Không tìm thấy phòng phù hợp!</strong></h4>
+                <h4 class="mt-3">Không tìm thấy phòng phù hợp!</h4>
                 <p class="mb-0">Vui lòng thử với ngày khác hoặc số người khác.</p>
             </div>
         </div>
-
     </div>
+
     <!-- Step 2: Booking Information -->
     <div id="bookingInfoSection" th:classappend="${currentStep != 2} ? 'hidden' : ''">
         <div class="booking-card">
             <h2 class="card-title"><i class="bi bi-person-fill"></i> Thông Tin Đặt Phòng</h2>
 
-            <!-- Hiển thị thông tin user nếu đã đăng nhập -->
             <div th:if="${currentUser != null}" class="alert alert-info mb-4">
                 <i class="bi bi-info-circle-fill"></i>
                 Bạn đang đăng nhập với tài khoản: <strong th:text="${currentUser.username}"></strong>
             </div>
 
             <form id="bookingForm" th:action="@{/booking/confirm}" method="post">
-                <!-- Hidden fields -->
                 <input type="hidden" name="roomTypeId" th:value="${selectedRoomType?.roomTypeId}">
                 <input type="hidden" name="checkInDate" th:value="${checkInDate}">
                 <input type="hidden" name="checkOutDate" th:value="${checkOutDate}">
                 <input type="hidden" name="amountPerson" th:value="${amountPerson}">
                 <input type="hidden" name="promotionCode" th:value="${promotionCode}">
 
-                <!-- Guest Information (chỉ hiện khi chưa đăng nhập) -->
+                <!-- Guest Information (if not logged in) -->
                 <div th:if="${currentUser == null}" class="mb-4">
                     <h5 class="mb-3"><i class="bi bi-person-badge"></i> Thông Tin Khách Hàng</h5>
                     <div class="row">
@@ -450,35 +476,31 @@
                             <label for="customerName" class="form-label">
                                 Họ và Tên <span class="text-danger">*</span>
                             </label>
-                            <input type="text" class="form-control" id="customerName"
-                                   name="customerName" required>
+                            <input type="text" class="form-control" id="customerName" name="customerName" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="customerPhone" class="form-label">
                                 Số Điện Thoại <span class="text-danger">*</span>
                             </label>
-                            <input type="tel" class="form-control" id="customerPhone"
-                                   name="customerPhone" required>
+                            <input type="tel" class="form-control" id="customerPhone" name="customerPhone" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="customerEmail" class="form-label">
                                 Email <span class="text-danger">*</span>
                             </label>
-                            <input type="email" class="form-control" id="customerEmail"
-                                   name="customerEmail" required>
+                            <input type="email" class="form-control" id="customerEmail" name="customerEmail" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="customerAddress" class="form-label">Địa Chỉ</label>
-                            <input type="text" class="form-control" id="customerAddress"
-                                   name="customerAddress">
+                            <input type="text" class="form-control" id="customerAddress" name="customerAddress">
                         </div>
                     </div>
                 </div>
 
-                <!-- Logged-in User Information (hiển thị khi đã đăng nhập) -->
+                <!-- Customer Information (if logged in) -->
                 <div th:if="${currentUser != null}" class="mb-4">
                     <h5 class="mb-3"><i class="bi bi-person-check-fill"></i> Thông Tin Khách Hàng</h5>
-                    <div class="customer-info-display p-3 bg-light rounded">
+                    <div class="customer-info-display">
                         <div class="row">
                             <div class="col-md-6 mb-2">
                                 <strong>Tên tài khoản:</strong>
@@ -495,7 +517,7 @@
                 <!-- Room Information -->
                 <div class="mb-4">
                     <h5 class="mb-3"><i class="bi bi-house-door-fill"></i> Thông Tin Phòng</h5>
-                    <div class="room-info-display p-3 bg-light rounded">
+                    <div class="room-info-display">
                         <div class="row">
                             <div class="col-md-6 mb-2">
                                 <strong>Loại phòng:</strong>
@@ -543,11 +565,10 @@
                     </div>
                     <div class="summary-row">
                         <span>Tổng tiền:</span>
-                        <strong class="text-danger" th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></strong>
+                        <strong th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></strong>
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="d-flex justify-content-between mt-4">
                     <button type="button" class="btn btn-secondary-custom" onclick="window.history.back()">
                         <i class="bi bi-arrow-left"></i> Quay Lại
@@ -559,19 +580,13 @@
             </form>
         </div>
     </div>
-
-
-
-
-
-    </form>
-        </div>
-    </div>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Form validation for date
+    // Form validation
     document.getElementById('searchForm')?.addEventListener('submit', function(e) {
         const checkIn = new Date(document.getElementById('checkInDate').value);
         const checkOut = new Date(document.getElementById('checkOutDate').value);
@@ -591,49 +606,14 @@
         }
     });
 
-    // Set min date
+    // Date constraints
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('checkInDate')?.setAttribute('min', today);
     document.getElementById('checkOutDate')?.setAttribute('min', today);
+
     document.getElementById('checkInDate')?.addEventListener('change', function() {
-        const checkInDate = this.value;
-        document.getElementById('checkOutDate')?.setAttribute('min', checkInDate);
+        document.getElementById('checkOutDate')?.setAttribute('min', this.value);
     });
-
-    // Select room and move to booking info
-    function selectRoom(roomTypeId) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/booking/select-room';
-
-        const fields = {
-            roomTypeId: roomTypeId,
-            checkInDate: document.getElementById('checkInDate').value,
-            checkOutDate: document.getElementById('checkOutDate').value,
-            amountPerson: document.getElementById('amountPerson').value,
-            promotionCode: document.getElementById('promotionCode').value
-        };
-
-        for (const [key, value] of Object.entries(fields)) {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = key;
-            input.value = value;
-            form.appendChild(input);
-        }
-
-        document.body.appendChild(form);
-        form.submit();
-    }
-
-    // Go back to room selection
-    function goBackToRoomSelection() {
-        window.location.href = '/booking/search?checkInDate=' +
-            document.querySelector('input[name="checkInDate"]').value +
-            '&checkOutDate=' + document.querySelector('input[name="checkOutDate"]').value +
-            '&amountPerson=' + document.querySelector('input[name="amountPerson"]').value +
-            '&promotionCode=' + (document.querySelector('input[name="promotionCode"]').value || '');
-    }
 </script>
 </body>
 </html>
