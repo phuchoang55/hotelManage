@@ -54,11 +54,18 @@ public class RoomType {
     public String getPrimaryImageUrl() {
         if (images != null && !images.isEmpty()) {
             return images.stream()
-                    .filter(RoomTypeImage::getIsPrimary)
+                    .filter(img -> img != null && Boolean.TRUE.equals(img.getIsPrimary()))
                     .findFirst()
                     .map(RoomTypeImage::getImageUrl)
-                    .orElse(images.get(0).getImageUrl());
+                    .filter(url -> url != null && !url.trim().isEmpty())
+                    .orElseGet(() -> images.stream()
+                            .map(RoomTypeImage::getImageUrl)
+                            .filter(url -> url != null && !url.trim().isEmpty())
+                            .findFirst()
+                            .orElse("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='250'%3E%3Crect fill='%23e0e0e0' width='300' height='250'/%3E%3Ctext fill='%23999' font-size='16' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ENo Image%3C/text%3E%3C/svg%3E"));
         }
-        return "/images/default-room.jpg";
+        return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='250'%3E%3Crect fill='%23e0e0e0' width='300' height='250'/%3E%3Ctext fill='%23999' font-size='16' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ENo Image%3C/text%3E%3C/svg%3E";
     }
+
 }
+
