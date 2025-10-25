@@ -1,7 +1,10 @@
 package com.hotelmanage.repository;
 
 
+import com.hotelmanage.entity.Enum.UserRole;
 import com.hotelmanage.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -11,4 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
+
+    Page<User> findByRoleNot(UserRole role, Pageable pageable);
+    Page<User> findByRoleNotAndUsernameContainingIgnoreCaseOrRoleNotAndEmailContainingIgnoreCase(
+            UserRole role1, String username, UserRole role2, String email, Pageable pageable);
 }

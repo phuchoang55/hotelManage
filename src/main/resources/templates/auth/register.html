@@ -183,6 +183,12 @@
             <input type="password" th:field="*{password}" placeholder="Tối thiểu 6 ký tự" required />
             <small class="error" th:errors="*{password}"></small>
         </label>
+        <label>Số điện thoại (tùy chọn)
+            <input type="text" th:field="*{phone}" placeholder="Ví dụ: 0901234567" />
+        </label>
+        <label>Địa chỉ (tùy chọn)
+            <input type="text" th:field="*{address}" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành" />
+        </label>
         <button type="submit" class="btn primary">Tạo tài khoản</button>
     </form>
     <p class="form-note">Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a></p>

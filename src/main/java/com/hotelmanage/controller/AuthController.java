@@ -57,6 +57,8 @@ public class AuthController {
                 .username(req.getUsername())
                 .password(passwordEncoder.encode(req.getPassword()))
                 .email(req.getEmail())
+                .phone(req.getPhone())
+                .address(req.getAddress())
                 .role(UserRole.CUSTOMER)
                 .status(UserStatus.ACTIVE)
                 .build();
@@ -73,6 +75,8 @@ public class AuthController {
         @NotBlank
         @Email
         private String email;
+        private String phone;
+        private String address;
     }
 }
 
