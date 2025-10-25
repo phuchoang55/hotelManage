@@ -33,6 +33,13 @@ public class Blog {
     @Column(name = "image_url", length = 1000)
     String imageUrl;
 
+    @Column(name = "excerpt", length = 500)
+    String excerpt;
+
+    @Lob
+    @Column(name = "content", columnDefinition = "LONGTEXT")
+    String content;
+
     @Column(name = "deleted_at")
     LocalDateTime deletedAt;
 }
