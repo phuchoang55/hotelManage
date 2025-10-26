@@ -4,77 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Danh sách Blog - Hoi An Hotel</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Poppins", sans-serif;
-        }
-
         body {
             background: #f5f5f5;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-
-        header {
-            background: #fff;
-            color: #000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 80px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        header .logo {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #f9c74f;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        nav a {
-            color: #333;
-            text-decoration: none;
-            margin: 0 10px;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            padding: 10px 25px;
-            background: #f9c74f;
-            color: #000;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .auth {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .auth .btn {
-            padding: 8px 20px;
-            background: #f9c74f;
-            color: #000;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            text-decoration: none;
         }
 
         section {
@@ -124,24 +60,31 @@
             margin-bottom: 10px;
         }
 
-        footer {
-            background: #222;
-            color: #fff;
-            padding: 40px;
-            text-align: center;
-            margin-top: auto;
+        .excerpt {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
-        footer p {
-            margin-top: 10px;
-            font-size: 0.9rem;
+        .card-actions {
+            margin-top: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #f9c74f;
+            color: #000;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background: #f8b830;
         }
 
         @media (max-width: 768px) {
-            header {
-                padding: 10px 20px;
-            }
-
             section {
                 padding: 40px 20px;
             }
@@ -153,18 +96,21 @@
     </style>
 </head>
 <body>
-
 <div th:replace="~{fragments/header :: header}"></div>
 
 <section>
     <h1>Danh sách Blog</h1>
     <div class="grid" th:if="${!#lists.isEmpty(blogs)}">
         <div class="card" th:each="b : ${blogs}">
-            <img th:src="${b.imageUrl} ?: @{/images/placeholder-blog.svg}"
+            <img th:src="${b.imageUrl ?: '/images/placeholder-blog.svg'}"
                  th:alt="${b.title}"
                  onerror="this.onerror=null; this.src='/images/placeholder-blog.svg';" />
             <div class="card-body">
                 <h3 th:text="${b.title}">Tiêu đề</h3>
+                <p class="excerpt" th:text="${b.excerpt ?: 'Đang cập nhật'}">Đoạn giới thiệu</p>
+                <div class="card-actions">
+                    <a class="btn" th:href="@{/blogs/{id}(id=${b.id})}">Xem chi tiết</a>
+                </div>
             </div>
         </div>
     </div>
@@ -174,6 +120,5 @@
 </section>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
-
 </body>
 </html>
