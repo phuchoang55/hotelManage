@@ -78,23 +78,6 @@
             background: #d4a017;
         }
 
-        .auth {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .auth .btn {
-            padding: 8px 20px;
-            background: #f9c74f;
-            color: #000;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            text-decoration: none;
-        }
-
         .hero {
             height: 100vh;
             position: relative;
@@ -260,20 +243,20 @@
 <section class="hero" id="home">
     <div class="slider">
         <div class="slide active"
-             style="background-image:url('https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1600&q=80');"></div>
+             style="background-image:url('https://images.unsplash.com/photo-1568495248636-6432b97bd949?auto=format&fit=crop&w=1600&q=80');"></div>
         <div class="slide"
-             style="background-image:url('https://images.unsplash.com/photo-1597004893520-3c1a05d3e19e?auto=format&fit=crop&w=1600&q=80');"></div>
+             style="background-image:url('https://images.unsplash.com/photo-1582719478148-9fffe0b0f9b4?auto=format&fit=crop&w=1600&q=80');"></div>
         <div class="slide"
-             style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80');"></div>
+             style="background-image:url('https://images.unsplash.com/photo-1600585154350-088c12dfea5f?auto=format&fit=crop&w=1600&q=80');"></div>
         <div class="slide"
-             style="background-image:url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1600&q=80');"></div>
+             style="background-image:url('https://images.unsplash.com/photo-1571896349842-33c89424de3e?auto=format&fit=crop&w=1600&q=80');"></div>
     </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
         <h1>Khách sạn Hội An</h1>
         <p>Di sản phương Đông sống động</p>
         <div class="booking-form">
-            <form th:action="@{/booking/search}" method="get">
+            <form th:action="@{/booking/search}" method="get" id="searchForm">
                 <input type="date" class="form-control" id="checkInDate" name="checkInDate"
                        th:value="${checkInDate}" required placeholder="Ngày nhận phòng">
 
@@ -305,21 +288,30 @@
 <section class="rooms" id="rooms">
     <h2>Phòng nghỉ</h2>
     <div class="grid">
-        <div class="room"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c" alt="">
-            <h3>Phòng Deluxe</h3></div>
-        <div class="room"><img src="https://images.unsplash.com/photo-1600585154207-6dc4e5a66f7d" alt="">
-            <h3>Phòng Suite</h3></div>
-        <div class="room"><img src="https://images.unsplash.com/photo-1560067174-8947e934e6a0" alt="">
-            <h3>Phòng Gia đình</h3></div>
+
+        <div class="room">
+            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80" alt="Phòng Deluxe sang trọng">
+            <h3>Phòng Deluxe</h3>
+        </div>
+
+        <div class="room">
+            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80" alt="Phòng Suite cao cấp có ban công">
+            <h3>Phòng Suite</h3>
+        </div>
+
+        <div class="room">
+            <img src="https://images.unsplash.com/photo-1626218178445-90d89fbb490b?auto=format&fit=crop&w=800&q=80" alt="Phòng Gia đình rộng rãi ấm cúng">
+            <h3>Phòng Gia đình</h3>
+        </div>
     </div>
 </section>
 
 <section class="dining" id="dining">
     <h2>Ẩm thực</h2>
     <div class="grid">
-        <div class="dining-item"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836" alt="">
+        <div class="dining-item"><img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=800&q=80" alt="">
             <h3>Nhà hàng Hội An</h3></div>
-        <div class="dining-item"><img src="https://images.unsplash.com/photo-1565958011705-44e21199e1f2" alt="">
+        <div class="dining-item"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" alt="">
             <h3>Quầy bar & Phòng chờ</h3></div>
     </div>
 </section>
@@ -327,12 +319,20 @@
 <section class="amenities" id="amenities">
     <h2>Tiện nghi</h2>
     <div class="grid">
-        <div class="amenity"><img src="https://images.unsplash.com/photo-1559599238-1df2b56f63ae" alt="">
-            <h3>Hồ bơi</h3></div>
-        <div class="amenity"><img src="https://images.unsplash.com/photo-1598970434795-0c54fe7c0642" alt="">
-            <h3>Spa & Massage</h3></div>
-        <div class="amenity"><img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461" alt="">
-            <h3>Phòng tập thể hình</h3></div>
+        <div class="amenity">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Hồ bơi ngoài trời với tầm nhìn đẹp">
+            <h3>Hồ bơi ngoài trời</h3>
+        </div>
+
+        <div class="amenity">
+            <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=800&q=80" alt="Phòng Spa & Massage thư giãn">
+            <h3>Spa & Massage</h3>
+        </div>
+
+        <div class="amenity">
+            <img src="https://images.unsplash.com/photo-1558611848-73f7eb4001a1?auto=format&fit=crop&w=800&q=80" alt="Phòng tập thể hình hiện đại">
+            <h3>Phòng tập thể hình</h3>
+        </div>
     </div>
 </section>
 
