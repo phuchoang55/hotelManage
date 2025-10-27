@@ -1,6 +1,8 @@
 package com.hotelmanage.repository.room;
 
 import com.hotelmanage.entity.room.RoomType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,4 +40,18 @@ public interface RoomTypeRepository extends JpaRepository<RoomType, Integer> {
     List<Object[]> findAvailableRoomTypes(@Param("checkInDate") LocalDate checkInDate,
                                           @Param("checkOutDate") LocalDate checkOutDate,
                                           @Param("amountPerson") Integer amountPerson);
+
+    /**
+     * Tìm tất cả loại phòng chưa xóa với phân trang
+     */
+    @Query("SELECT rt FROM RoomType rt WHERE rt.deletedAt IS NULL")
+    Page<RoomType> findAllActive(Pageable pageable);
+
+    /**
+     * Tìm kiếm loại phòng theo tên với phân trang
+     */
+    @Query("SELECT rt FROM RoomType rt WHERE rt.deletedAt IS NULL " +
+            "AND LOWER(rt.roomTypeName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<RoomType> findByRoomTypeNameContainingIgnoreCaseAndDeletedAtIsNull(
+            @Param("keyword") String keyword, Pageable pageable);
 }

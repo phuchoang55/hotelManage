@@ -4,6 +4,9 @@ import com.hotelmanage.entity.room.RoomType;
 import com.hotelmanage.repository.room.RoomTypeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,5 +77,20 @@ public class RoomTypeService {
         }
         roomType.setDeletedAt(LocalDateTime.now());
         roomTypeRepository.save(roomType);
+    }
+
+    /**
+     * Tìm tất cả loại phòng với phân trang
+     */
+    public Page<RoomType> findAll(Pageable pageable) {
+        return roomTypeRepository.findAllActive(pageable);
+    }
+
+    /**
+     * Tìm kiếm loại phòng theo tên với phân trang
+     */
+    public Page<RoomType> searchByName(String keyword, Pageable pageable) {
+        return roomTypeRepository.findByRoomTypeNameContainingIgnoreCaseAndDeletedAtIsNull(
+                keyword.trim(), pageable);
     }
 }

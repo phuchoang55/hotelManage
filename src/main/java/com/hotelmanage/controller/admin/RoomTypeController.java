@@ -3,6 +3,10 @@ package com.hotelmanage.controller.admin;
 import com.hotelmanage.entity.room.RoomType;
 import com.hotelmanage.service.room.RoomTypeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.validation.Valid;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -21,9 +27,23 @@ public class RoomTypeController {
     private final RoomTypeService roomTypeService;
 
     @GetMapping
-    public String listRoomTypes(Model model) {
-        List<RoomType> roomTypes = roomTypeService.findAll();
-        model.addAttribute("roomTypes", roomTypes);
+    public String listRoomTypes(@RequestParam(value = "q", required = false) String query,
+                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                Model model) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.ASC, "roomTypeId"));
+        Page<RoomType> roomTypePage;
+
+        if (query != null && !query.trim().isEmpty()) {
+            roomTypePage = roomTypeService.searchByName(query.trim(), pageable);
+        } else {
+            roomTypePage = roomTypeService.findAll(pageable);
+        }
+
+        model.addAttribute("roomTypes", roomTypePage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", roomTypePage.getTotalPages());
+        model.addAttribute("q", query);
+
         return "admin/room-type-list";
     }
 
@@ -36,8 +56,15 @@ public class RoomTypeController {
     @PostMapping("/create")
     public String createRoomType(@Valid @ModelAttribute RoomType roomType,
                                  BindingResult result,
+                                 Model model,
                                  RedirectAttributes redirectAttributes) {
+
+        log.info("Creating room type: name={}, price={}, amountPerson={}",
+                roomType.getRoomTypeName(), roomType.getPrice(), roomType.getAmountPerson());
+
         if (result.hasErrors()) {
+            model.addAttribute("roomType", roomType);
+            model.addAttribute("error", "Vui lòng kiểm tra lại thông tin nhập vào!");
             return "admin/room-type-form";
         }
 
@@ -46,10 +73,15 @@ public class RoomTypeController {
             redirectAttributes.addFlashAttribute("success", "Thêm loại phòng thành công!");
             return "redirect:/admin/room-types";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Lỗi: " + e.getMessage());
-            return "redirect:/admin/room-types/create";
+            log.error("Error creating room type", e);
+            model.addAttribute("roomType", roomType);
+            model.addAttribute("error", "Lỗi: " + e.getMessage());
+            return "admin/room-type-form";
         }
     }
+
+
+
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Integer id, Model model) {
@@ -96,5 +128,8 @@ public class RoomTypeController {
         }
         return "redirect:/admin/room-types";
     }
+
+
+
 
 }
