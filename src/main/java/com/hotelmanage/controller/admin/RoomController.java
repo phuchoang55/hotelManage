@@ -85,6 +85,7 @@ public class RoomController {
         }
     }
 
+
     @PostMapping("/delete/{id}")
     public String deleteRoom(@PathVariable Integer id,
                              RedirectAttributes redirectAttributes) {
@@ -96,4 +97,12 @@ public class RoomController {
         }
         return "redirect:/admin/rooms";
     }
+    @GetMapping("/search")
+    public String searchRooms(@RequestParam("keyword") String keyword, Model model) {
+        List<Room> rooms = roomService.searchRooms(keyword);
+        model.addAttribute("rooms", rooms);
+        model.addAttribute("keyword", keyword);
+        return "admin/room-list";
+    }
+
 }

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {
 
@@ -36,7 +39,31 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
             @Param("roomTypeId") Integer roomTypeId,
             @Param("checkInDate") LocalDate checkInDate,
             @Param("checkOutDate") LocalDate checkOutDate);
+    @Query("""
+SELECT r FROM Room r
+WHERE r.deletedAt IS NULL
+AND (
+    LOWER(r.roomNumber) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    OR LOWER(r.roomType.roomTypeName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    OR LOWER(r.status) LIKE LOWER(CONCAT('%', :keyword, '%'))
+)
+ORDER BY r.roomNumber ASC
+""")
+    List<Room> searchRooms(@Param("keyword") String keyword);
 
+    @Query("SELECT r FROM Room r WHERE r.deletedAt IS NULL")
+    Page<Room> findAllActive(Pageable pageable);
+
+    @Query("""
+    SELECT r FROM Room r
+    WHERE r.deletedAt IS NULL
+      AND (
+        LOWER(r.roomNumber) LIKE LOWER(CONCAT('%', :keyword, '%'))
+        OR LOWER(r.roomType.roomTypeName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+        OR LOWER(r.status) LIKE LOWER(CONCAT('%', :keyword, '%'))
+      )
+""")
+    Page<Room> searchActiveRooms(@Param("keyword") String keyword, Pageable pageable);
     /**
      * Tìm theo room type
      */

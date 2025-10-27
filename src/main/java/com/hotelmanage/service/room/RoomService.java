@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -36,9 +38,6 @@ public class RoomService {
                         "Không tìm thấy phòng trống cho loại phòng này trong thời gian đã chọn!"));
     }
 
-    // ======================================
-    // 🔹 CRUD cho Admin Dashboard (Room CRUD)
-    // ======================================
 
     /**
      * Lấy tất cả các phòng chưa bị xóa
@@ -93,6 +92,15 @@ public class RoomService {
         room.setDeletedAt(LocalDateTime.now());
         roomRepository.save(room);
     }
+    public List<Room> searchRooms(String keyword) {
+        log.info("Searching rooms with keyword: {}", keyword);
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return findAll();
+        }
+        return roomRepository.searchRooms(keyword.trim());
+    }
+
+
 
 
 }
