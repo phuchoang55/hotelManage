@@ -1,11 +1,14 @@
 package com.hotelmanage.entity.restaurant;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -28,6 +31,7 @@ public class Menu {
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "restaurant_id", nullable = false)
     Restaurant restaurant;
 
@@ -36,6 +40,9 @@ public class Menu {
 
     @Column(name = "image_url", length = 1000)
     String imageUrl;
+
+    @Column(name = "price", precision = 12, scale = 0)
+    BigDecimal price;
 
     @Column(name = "deleted_at")
     LocalDateTime deletedAt;
