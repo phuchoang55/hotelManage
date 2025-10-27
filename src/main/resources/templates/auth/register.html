@@ -184,7 +184,12 @@
             <small class="error" th:errors="*{password}"></small>
         </label>
         <label>Số điện thoại (tùy chọn)
-            <input type="text" th:field="*{phone}" placeholder="Ví dụ: 0901234567" />
+            <input type="text"
+                   th:field="*{phone}"
+                   placeholder="Ví dụ: 0901234567"
+                   maxlength="10"
+                   pattern="0[0-9]{9}"
+                   title="Số điện thoại phải gồm 10 chữ số và bắt đầu bằng số 0" />
         </label>
         <label>Địa chỉ (tùy chọn)
             <input type="text" th:field="*{address}" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành" />
