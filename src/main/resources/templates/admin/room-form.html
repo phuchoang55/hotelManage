@@ -11,16 +11,16 @@
 
     <h2 th:text="${room.roomId == null ? 'Thêm Phòng' : 'Chỉnh Sửa Phòng'}"></h2>
 
-
     <form th:object="${room}"
           th:action="@{${room.roomId == null ? '/admin/rooms/create' : '/admin/rooms/update/' + room.roomId}}"
           method="post">
 
 
-    <div class="mb-3">
+        <div class="mb-3">
             <label for="roomNumber" class="form-label">Số Phòng</label>
             <input type="text" id="roomNumber" th:field="*{roomNumber}" class="form-control" required>
         </div>
+
 
         <div class="mb-3">
             <label for="status" class="form-label">Trạng Thái</label>
@@ -32,13 +32,26 @@
         </div>
 
         <div class="mb-3">
-            <label for="roomType" class="form-label">Loại Phòng</label>
-            <select id="roomType" th:field="*{roomType.roomTypeId}" class="form-select" required>
+            <label class="form-label">Loại Phòng</label>
+
+            <select th:if="${room.roomId == null}"
+                    th:field="*{roomType.roomTypeId}"
+                    class="form-select"
+                    required>
                 <option th:each="rt : ${roomTypes}"
                         th:value="${rt.roomTypeId}"
                         th:text="${rt.roomTypeName}">
                 </option>
             </select>
+
+            <input th:if="${room.roomId != null}"
+                   type="text"
+                   class="form-control"
+                   th:value="${room.roomType.roomTypeName}"
+                   readonly>
+
+            <input type="hidden" th:if="${room.roomId != null}"
+                   th:field="*{roomType.roomTypeId}">
         </div>
 
         <button type="submit" class="btn btn-primary"
