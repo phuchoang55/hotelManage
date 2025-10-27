@@ -136,25 +136,70 @@
             text-transform: uppercase;
         }
 
+        /* --- Booking form --- */
         .booking-form {
-            position: relative;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px 35px;
+            border-radius: 12px;
             display: flex;
-            gap: 15px;
             justify-content: center;
-            flex-wrap: wrap;
-            z-index: 2;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 10px;
+            align-items: center;
         }
 
-        .booking-form input,
-        .booking-form select {
-            padding: 10px;
+        .form-grid {
+            display: flex;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #f9c74f;
+            box-shadow: 0 0 5px rgba(249, 199, 79, 0.5);
+        }
+
+        .submit-btn {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .btn-primary {
+            background: #f9c74f;
+            color: #000;
             border: none;
-            border-radius: 4px;
-            width: 200px;
+            padding: 11px 25px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #d4a017;
         }
 
         section {
@@ -170,7 +215,6 @@
 
         .about,
         .rooms,
-        .dining,
         .amenities {
             background: #f9f9f9;
             margin-bottom: 20px;
@@ -179,7 +223,6 @@
         }
 
         .rooms .grid,
-        .dining .grid,
         .amenities .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -188,7 +231,6 @@
         }
 
         .room,
-        .dining-item,
         .amenity {
             background: #fff;
             border-radius: 8px;
@@ -197,8 +239,175 @@
         }
 
         .room img,
-        .dining-item img,
         .amenity img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        /* --- DINING SECTION - NEW LAYOUT --- */
+        .dining {
+            background: #f9f9f9;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            padding: 60px 40px;
+        }
+
+        .dining-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .dining-image {
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .dining-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dining-content h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            text-align: left;
+        }
+
+        .dining-content p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 0;
+            text-align: justify;
+        }
+
+        .dining-link {
+            display: inline-block;
+            margin-top: 40px;
+            text-decoration: none;
+            color: #f9c74f;
+            font-size: 1rem;
+            border-bottom: 2px solid #f9c74f;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .dining-link:hover {
+            color: #d4a017;
+            border-bottom-color: #d4a017;
+        }
+
+        /* --- AMENITIES SECTION - NEW LAYOUT --- */
+        .amenities-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .amenities-image {
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .amenities-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .amenities-content h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            text-align: left;
+        }
+
+        .amenities-content p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 0;
+            text-align: justify;
+        }
+
+        .amenities-link {
+            display: inline-block;
+            margin-top: 40px;
+            text-decoration: none;
+            color: #f9c74f;
+            font-size: 1rem;
+            border-bottom: 2px solid #f9c74f;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .amenities-link:hover {
+            color: #d4a017;
+            border-bottom-color: #d4a017;
+        }
+
+        @media (max-width: 1024px) {
+            .amenities-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .amenities-image {
+                height: 400px;
+            }
+
+            .amenities-content h2 {
+                text-align: center;
+                font-size: 2rem;
+            }
+
+            .amenities-content p {
+                text-align: center;
+            }
+
+            .amenities-link {
+                display: block;
+                text-align: center;
+            }
+        }
+
+        .dining .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .dining-item {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dining-item img {
             width: 100%;
             height: 220px;
             object-fit: cover;
@@ -216,6 +425,31 @@
             font-size: 0.9rem;
         }
 
+        @media (max-width: 1024px) {
+            .dining-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .dining-image {
+                height: 400px;
+            }
+
+            .dining-content h2 {
+                text-align: center;
+                font-size: 2rem;
+            }
+
+            .dining-content p {
+                text-align: center;
+            }
+
+            .dining-link {
+                display: block;
+                text-align: center;
+            }
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -230,8 +464,25 @@
                 font-size: 2.2rem;
             }
 
-            .booking-form {
+            .form-grid {
                 flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-group {
+                width: 100%;
+            }
+
+            .submit-btn {
+                justify-content: center;
+            }
+
+            .dining-image {
+                height: 300px;
+            }
+
+            .dining-content h2 {
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -245,36 +496,45 @@
         <div class="slide active"
              style="background-image:url('https://images.unsplash.com/photo-1568495248636-6432b97bd949?auto=format&fit=crop&w=1600&q=80');"></div>
         <div class="slide"
-             style="background-image:url('https://images.unsplash.com/photo-1582719478148-9fffe0b0f9b4?auto=format&fit=crop&w=1600&q=80');"></div>
+             style="background-image:url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1600&q=80');"></div>
         <div class="slide"
-             style="background-image:url('https://images.unsplash.com/photo-1600585154350-088c12dfea5f?auto=format&fit=crop&w=1600&q=80');"></div>
+             style="background-image:url('https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1600&q=80');"></div>
         <div class="slide"
-             style="background-image:url('https://images.unsplash.com/photo-1571896349842-33c89424de3e?auto=format&fit=crop&w=1600&q=80');"></div>
+             style="background-image:url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1600&q=80');"></div>
     </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
         <h1>Khách sạn Hội An</h1>
         <p>Di sản phương Đông sống động</p>
+
         <div class="booking-form">
-            <form th:action="@{/booking/search}" method="get" id="searchForm">
-                <input type="date" class="form-control" id="checkInDate" name="checkInDate"
-                       th:value="${checkInDate}" required placeholder="Ngày nhận phòng">
+            <form th:action="@{/booking/search}" method="get" id="searchForm" class="form-grid">
+                <div class="form-group">
+                    <label for="checkInDate">Ngày nhận phòng</label>
+                    <input type="date" id="checkInDate" name="checkInDate"
+                           th:value="${checkInDate}" required>
+                </div>
 
-                <input type="date" class="form-control" id="checkOutDate" name="checkOutDate"
-                       th:value="${checkOutDate}" required placeholder="Ngày trả phòng">
+                <div class="form-group">
+                    <label for="checkOutDate">Ngày trả phòng</label>
+                    <input type="date" id="checkOutDate" name="checkOutDate"
+                           th:value="${checkOutDate}" required>
+                </div>
 
-                <label for="amountPerson" class="form-label">Số người:</label>
-                <select class="form-select" id="amountPerson" name="amountPerson" required>
-                    <option value="">Chọn</option>
-                    <option th:value="1" th:selected="${amountPerson == 1}">1 người</option>
-                    <option th:value="2" th:selected="${amountPerson == 2}">2 người</option>
-                    <option th:value="3" th:selected="${amountPerson == 3}">3 người</option>
-                    <option th:value="4" th:selected="${amountPerson == 4}">4 người</option>
-                </select>
+                <div class="form-group">
+                    <label for="amountPerson">Số người</label>
+                    <select id="amountPerson" name="amountPerson" required>
+                        <option value="">Chọn</option>
+                        <option th:value="1" th:selected="${amountPerson == 1}">1 người</option>
+                        <option th:value="2" th:selected="${amountPerson == 2}">2 người</option>
+                        <option th:value="3" th:selected="${amountPerson == 3}">3 người</option>
+                        <option th:value="4" th:selected="${amountPerson == 4}">4 người</option>
+                    </select>
+                </div>
 
-                <button type="submit" class="btn-primary">
-                    Tìm phòng
-                </button>
+                <div class="form-group submit-btn">
+                    <button type="submit" class="btn-primary">Tìm phòng</button>
+                </div>
             </form>
         </div>
     </div>
@@ -288,7 +548,6 @@
 <section class="rooms" id="rooms">
     <h2>Phòng nghỉ</h2>
     <div class="grid">
-
         <div class="room">
             <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80" alt="Phòng Deluxe sang trọng">
             <h3>Phòng Deluxe</h3>
@@ -306,32 +565,32 @@
     </div>
 </section>
 
+<!-- DINING SECTION - UPDATED LAYOUT -->
 <section class="dining" id="dining">
-    <h2>Ẩm thực</h2>
-    <div class="grid">
-        <div class="dining-item"><img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=800&q=80" alt="">
-            <h3>Nhà hàng Hội An</h3></div>
-        <div class="dining-item"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" alt="">
-            <h3>Quầy bar & Phòng chờ</h3></div>
+    <div class="dining-container">
+        <div class="dining-image">
+            <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=800&q=80" alt="Nhà hàng Hội An">
+        </div>
+
+        <div class="dining-content">
+            <h2>Ẩm thực</h2>
+            <p>Khách sạn Hội An tự hào mang đến trải nghiệm ẩm thực độc đáo, kết hợp hương vị truyền thống Hội An với những sáng tạo hiện đại.  Với tầm nhìn ra phố cổ được che phủ ánh nắng chiều, mỗi bữa ăn tại đây sẽ trở thành những ký ức không thể quên của kỳ nghỉ tại Hội An.</p>
+            <a href="#" class="dining-link">Xem thêm</a>
+        </div>
     </div>
 </section>
 
+<!-- AMENITIES SECTION - UPDATED LAYOUT -->
 <section class="amenities" id="amenities">
-    <h2>Tiện nghi</h2>
-    <div class="grid">
-        <div class="amenity">
-            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Hồ bơi ngoài trời với tầm nhìn đẹp">
-            <h3>Hồ bơi ngoài trời</h3>
+    <div class="amenities-container">
+        <div class="amenities-content">
+            <h2>Tiện nghi</h2>
+            <p>Khách sạn Hội An cung cấp những tiện nghi hiện đại để Quý khách có thể thư giãn và tái tạo năng lượng sau những ngày khám phá. Hồ bơi ngoài trời với tầm nhìn tuyệt đẹp là nơi lý tưởng để thoát khỏi nắng nóng Hội An, trong khi trung tâm Spa & Massage của chúng tôi mang đến những liệu pháp chữa lành truyền thống kết hợp với kỹ thuật hiện đại. Phòng tập thể hình được trang bị đầy đủ dụng cụ giúp Quý khách duy trì sức khỏe.</p>
+            <a href="amenities" class="amenities-link">Xem thêm</a>
         </div>
 
-        <div class="amenity">
-            <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=800&q=80" alt="Phòng Spa & Massage thư giãn">
-            <h3>Spa & Massage</h3>
-        </div>
-
-        <div class="amenity">
+        <div class="amenities-image">
             <img src="https://images.unsplash.com/photo-1558611848-73f7eb4001a1?auto=format&fit=crop&w=800&q=80" alt="Phòng tập thể hình hiện đại">
-            <h3>Phòng tập thể hình</h3>
         </div>
     </div>
 </section>
@@ -375,7 +634,6 @@
         }
     });
 
-    // Giới hạn ngày nhỏ nhất
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('checkInDate')?.setAttribute('min', today);
     document.getElementById('checkOutDate')?.setAttribute('min', today);
