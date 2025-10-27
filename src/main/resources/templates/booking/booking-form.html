@@ -476,23 +476,29 @@
                             <label for="customerName" class="form-label">
                                 Họ và Tên <span class="text-danger">*</span>
                             </label>
-                            <input type="text" class="form-control" id="customerName" name="customerName" required>
+                            <input type="text" class="form-control" id="customerName"
+                                   name="customerName" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="customerPhone" class="form-label">
                                 Số Điện Thoại <span class="text-danger">*</span>
                             </label>
-                            <input type="tel" class="form-control" id="customerPhone" name="customerPhone" required>
+                            <input type="tel" class="form-control" id="customerPhone"
+                                   name="customerPhone" required
+                                   pattern="[0-9]{10,11}"
+                                   placeholder="0123456789">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="customerEmail" class="form-label">
                                 Email <span class="text-danger">*</span>
                             </label>
-                            <input type="email" class="form-control" id="customerEmail" name="customerEmail" required>
+                            <input type="email" class="form-control" id="customerEmail"
+                                   name="customerEmail" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="customerAddress" class="form-label">Địa Chỉ</label>
-                            <input type="text" class="form-control" id="customerAddress" name="customerAddress">
+                            <input type="text" class="form-control" id="customerAddress"
+                                   name="customerAddress">
                         </div>
                     </div>
                 </div>
@@ -524,36 +530,47 @@
 
                 <!-- Room Information -->
                 <div class="mb-4">
-                    <h5 class="mb-3"><i class="bi bi-house-door-fill"></i> Thông Tin Phòng</h5>
-                    <div class="room-info-display">
+                    <h5 class="mb-3"><i class="bi bi-house-door-fill"></i> Thông Tin Phòng Đã Chọn</h5>
+                    <div class="room-info-display" th:if="${selectedRoomType}">
                         <div class="row">
-                            <div class="col-md-6 mb-2">
+                            <div class="col-md-6 mb-3">
                                 <strong>Loại phòng:</strong>
-                                <span th:text="${selectedRoomType?.roomTypeName}"></span>
+                                <span th:text="${selectedRoomType.roomTypeName}"></span>
                             </div>
-                            <div class="col-md-6 mb-2">
-                                <strong>Số người:</strong>
-                                <span th:text="${amountPerson}"></span>
+                            <div class="col-md-6 mb-3">
+                                <strong>Giá phòng/đêm:</strong>
+                                <span th:text="${#numbers.formatDecimal(selectedRoomType.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
                             </div>
-                            <div class="col-md-6 mb-2">
+                            <div class="col-md-6 mb-3">
                                 <strong>Ngày nhận phòng:</strong>
                                 <span th:text="${#temporals.format(checkInDate, 'dd/MM/yyyy')}"></span>
                             </div>
-                            <div class="col-md-6 mb-2">
+                            <div class="col-md-6 mb-3">
                                 <strong>Ngày trả phòng:</strong>
                                 <span th:text="${#temporals.format(checkOutDate, 'dd/MM/yyyy')}"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <strong>Số người:</strong>
+                                <span th:text="${amountPerson}"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <strong>Số đêm:</strong>
+                                <span th:text="${numberOfNights}"></span>
                             </div>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Special Requests -->
                 <div class="mb-4">
                     <label for="specialRequests" class="form-label">
                         <i class="bi bi-chat-left-text"></i> Yêu Cầu Đặc Biệt
                     </label>
-                    <textarea class="form-control" id="specialRequests" name="specialRequests"
-                              rows="3" placeholder="Nhập yêu cầu đặc biệt của bạn (nếu có)"></textarea>
+                    <textarea class="form-control" id="specialRequests"
+                              name="specialRequests"
+                              rows="3"
+                              placeholder="Nhập yêu cầu đặc biệt của bạn (nếu có)"></textarea>
                 </div>
 
                 <!-- Booking Summary -->
@@ -576,6 +593,7 @@
                         <strong th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></strong>
                     </div>
                 </div>
+
 
                 <div class="d-flex justify-content-between mt-4">
                     <button type="button" class="btn btn-secondary-custom" onclick="window.history.back()">

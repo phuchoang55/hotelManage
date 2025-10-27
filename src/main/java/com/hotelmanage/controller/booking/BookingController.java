@@ -13,6 +13,7 @@ import com.hotelmanage.service.room.RoomTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -73,6 +74,15 @@ public class BookingController {
 
         if (roomTypes == null || roomTypes.isEmpty()) {
             model.addAttribute("message", "Không tìm thấy phòng phù hợp với yêu cầu của bạn.");
+        }
+
+        // Force initialize images để tránh lazy loading
+        if (roomTypes != null) {
+            roomTypes.forEach(rt -> {
+                if (rt.getImages() != null) {
+                    rt.getImages().size(); // Force load
+                }
+            });
         }
 
         return "booking/booking-form";
