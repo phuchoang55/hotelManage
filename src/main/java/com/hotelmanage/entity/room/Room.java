@@ -32,7 +32,7 @@ public class Room {
     private RoomStatus status = RoomStatus.AVAILABLE;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "roomType_id")
+    @JoinColumn(name = "room_type_id")
     private RoomType roomType;
 
     @Column(name = "deleted_at")

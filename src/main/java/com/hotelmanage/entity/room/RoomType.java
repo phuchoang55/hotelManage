@@ -18,10 +18,10 @@ public class RoomType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "roomType_id")
+    @Column(name = "room_type_id")
     private Integer roomTypeId;
 
-    @Column(name = "roomType_name", nullable = false)
+    @Column(name = "room_type_name", nullable = false)
     private String roomTypeName;
 
     @Column(name = "deleted_at")
@@ -42,10 +42,10 @@ public class RoomType {
     @Column(name = "amount_person", nullable = false)
     private Integer amountPerson;
 
-    @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "roomType")
     private List<Room> rooms;
 
-    @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "roomType", fetch = FetchType.EAGER)
     private List<RoomTypeImage> images;
 
     @Transient

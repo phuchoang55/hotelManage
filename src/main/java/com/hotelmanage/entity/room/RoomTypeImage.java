@@ -29,6 +29,6 @@ public class RoomTypeImage {
     private Boolean isPrimary = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "roomType_id", nullable = false)
+    @JoinColumn(name = "room_type_id", nullable = false)
     private RoomType roomType;
 }
