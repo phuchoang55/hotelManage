@@ -225,50 +225,52 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <th:block layout:fragment="extra-js"></th:block>
 <script th:src="@{/simple-datatables/simple-datatables.js}"></script>
-<script>
+<script th:src="@{/tinymce/tinymce.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<!--<script>-->
 
-const select = (el, all = false) => {
-  el = el.trim()
-  if (all) {
-    return [...document.querySelectorAll(el)]
-  } else {
-    return document.querySelector(el)
-  }
-}
+<!--const select = (el, all = false) => {-->
+<!--  el = el.trim()-->
+<!--  if (all) {-->
+<!--    return [...document.querySelectorAll(el)]-->
+<!--  } else {-->
+<!--    return document.querySelector(el)-->
+<!--  }-->
+<!--}-->
 
-const datatables = select('.datatable', true)
-     datatables.forEach(datatable => {
-     new simpleDatatables.DataTable(datatable, {
-         searchable: true,
-         fixedHeight: false,
-       perPageSelect: [5, 10, 15, ["All", -1]],
-       columns: [
-           { select: 0, sortable: true, searchable: true },
-           { select: 1, sortable: true, searchable: true },
-           { select: 2, sortable: false, searchable: false },
-           { select: 3, sortable: false, searchable: false }
-         ]
-     });
-})
+<!--const datatables = select('.datatable', true)-->
+<!--     datatables.forEach(datatable => {-->
+<!--     new simpleDatatables.DataTable(datatable, {-->
+<!--         searchable: true,-->
+<!--         fixedHeight: false,-->
+<!--       perPageSelect: [5, 10, 15, ["All", -1]],-->
+<!--       columns: [-->
+<!--           { select: 0, sortable: true, searchable: true },-->
+<!--           { select: 1, sortable: true, searchable: true },-->
+<!--           { select: 2, sortable: false, searchable: false },-->
+<!--           { select: 3, sortable: false, searchable: false }-->
+<!--         ]-->
+<!--     });-->
+<!--})-->
 
-const datatablesReceptionists = select('.datatable-receptionists', true)
-     datatablesReceptionists.forEach(datatable => {
-     new simpleDatatables.DataTable(datatable, {
-         searchable: true,
-         fixedHeight: false,
-       perPageSelect: [5, 10, 15, ["All", -1]],
-       columns: [
-           { select: 0, sortable: true, searchable: true },
-           { select: 1, sortable: true, searchable: true },
-           { select: 2, sortable: false, searchable: false },
-           { select: 3, sortable: true, searchable: true },
-           { select: 4, sortable: true, searchable: true },
-           { select: 5, sortable: true, searchable: true },
-           { select: 6, sortable: true, searchable: true },
-           { select: 7, sortable: false, searchable: false },
-         ]
-     });
-})
-</script>
+<!--const datatablesReceptionists = select('.datatable-receptionists', true)-->
+<!--     datatablesReceptionists.forEach(datatable => {-->
+<!--     new simpleDatatables.DataTable(datatable, {-->
+<!--         searchable: true,-->
+<!--         fixedHeight: false,-->
+<!--       perPageSelect: [5, 10, 15, ["All", -1]],-->
+<!--       columns: [-->
+<!--           { select: 0, sortable: true, searchable: true },-->
+<!--           { select: 1, sortable: true, searchable: true },-->
+<!--           { select: 2, sortable: false, searchable: false },-->
+<!--           { select: 3, sortable: true, searchable: true },-->
+<!--           { select: 4, sortable: true, searchable: true },-->
+<!--           { select: 5, sortable: true, searchable: true },-->
+<!--           { select: 6, sortable: true, searchable: true },-->
+<!--           { select: 7, sortable: false, searchable: false },-->
+<!--         ]-->
+<!--     });-->
+<!--})-->
+<!--</script>-->
 </body>
 </html>

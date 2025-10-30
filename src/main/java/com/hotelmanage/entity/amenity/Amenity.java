@@ -31,5 +31,5 @@ public class Amenity {
 
     @Lob
     @Column(name = "description", columnDefinition = "LONGTEXT")
-    String content;
+    String description;
 }

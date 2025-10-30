@@ -32,6 +32,13 @@
                    required>
         </div>
 
+        <div class="mb-3">
+            <label for="description" class="form-label">Mô tả</label>
+            <!-- TinyMCE Editor -->
+            <textarea class="tinymce-editor" id="description" th:field="*{description}">
+            </textarea><!-- End TinyMCE Editor -->
+        </div>
+
         <button type="submit" class="btn btn-primary"
                 th:text="${amenity.amenityId == null ? 'Lưu' : 'Cập nhật'}"></button>
         <a th:href="@{/admin/amenities}" class="btn btn-secondary">Quay lại</a>
