@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,5 +31,12 @@ public class AmenitiesController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", amenityPage.getTotalPages());
         return "amenities/list";
+    }
+
+    @GetMapping("/amenities/{id}")
+    public String showDetail(@PathVariable Integer id, Model model) {
+        Amenity amenity = amenityService.findById(id);
+        model.addAttribute("amenity", amenity);
+        return "amenities/detail";
     }
 }
