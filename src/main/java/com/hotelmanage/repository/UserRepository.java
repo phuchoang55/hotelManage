@@ -6,7 +6,9 @@ import com.hotelmanage.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -18,4 +20,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByRoleNot(UserRole role, Pageable pageable);
     Page<User> findByRoleNotAndUsernameContainingIgnoreCaseOrRoleNotAndEmailContainingIgnoreCase(
             UserRole role1, String username, UserRole role2, String email, Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE u.role = 'RECEPTIONIST' AND u.deletedAt is null")
+    List<User> findReceptionists();
+
 }

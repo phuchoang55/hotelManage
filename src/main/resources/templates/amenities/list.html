@@ -3,78 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tiện ích - Hoi An Hotel</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Danh sách Tiện Nghi - Hoi An Hotel</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Poppins", sans-serif;
-        }
-
         body {
             background: #f5f5f5;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-
-        header {
-            background: #fff;
-            color: #000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 80px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        header .logo {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #f9c74f;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        nav a {
-            color: #333;
-            text-decoration: none;
-            margin: 0 10px;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            padding: 10px 25px;
-            background: #f9c74f;
-            color: #000;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .auth {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .auth .btn {
-            padding: 8px 20px;
-            background: #f9c74f;
-            color: #000;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            text-decoration: none;
         }
 
         section {
@@ -119,60 +55,36 @@
         }
 
         .card-body h3 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: #222;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
-        .desc {
+        .excerpt {
             color: #666;
-            line-height: 1.6;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
-        .time {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #555;
-            font-weight: 500;
-            margin-bottom: 15px;
+        .card-actions {
+            margin-top: 15px;
         }
 
-        .view-btn {
-            width: 100%;
-            padding: 10px;
+        .btn {
+            display: inline-block;
+            padding: 8px 20px;
             background: #f9c74f;
             color: #000;
-            border: none;
+            text-decoration: none;
             border-radius: 4px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
+            font-weight: 500;
         }
 
-        .view-btn:hover {
-            background: #d4a017;
-        }
-
-        footer {
-            background: #222;
-            color: #fff;
-            padding: 40px;
-            text-align: center;
-            margin-top: auto;
-        }
-
-        footer p {
-            margin-top: 10px;
-            font-size: 0.9rem;
+        .btn:hover {
+            background: #f8b830;
         }
 
         @media (max-width: 768px) {
-            header {
-                padding: 10px 20px;
-            }
-
             section {
                 padding: 40px 20px;
             }
@@ -181,36 +93,78 @@
                 font-size: 2rem;
             }
         }
+
+        .pagination {
+           display: flex;
+           justify-content: center;
+           margin-top: 30px;
+           gap: 8px;
+       }
+
+       .page-btn {
+           padding: 10px 16px;
+           background: #eee;
+           border-radius: 8px;
+           text-decoration: none;
+           color: #333;
+           font-weight: 500;
+       }
+
+       .page-btn:hover {
+           background: #f4c542;
+           color: #fff;
+       }
+
+      .page-btn.active {
+           background: #f4c542;
+           color: #fff;
+       }
+
+      .empty-msg {
+           text-align: center;
+           font-size: 18px;
+           color: #777;
+           margin-top: 40px;
+       }
     </style>
 </head>
 <body>
-
 <div th:replace="~{fragments/header :: header}"></div>
 
 <section>
-    <h1>Tiện ích khách sạn</h1>
-    <div class="grid" th:if="${!#lists.isEmpty(amenities)}">
-        <div class="card" th:each="a : ${amenities}">
-            <img th:src="${a.image} ?: @{/images/placeholder-amenity.svg}"
-                 th:alt="${a.name}"
-                 onerror="this.onerror=null; this.src='/images/placeholder-amenity.svg';" />
-            <div class="card-body">
-                <h3 th:text="${a.name}">Tên tiện ích</h3>
-                <p class="desc" th:text="${a.desc}">Mô tả tiện ích</p>
-                <p class="time" th:if="${a.time}">
-                    <span>🕓</span>
-                    <span th:text="${a.time}">Giờ hoạt động</span>
-                </p>
-                <button class="view-btn">Xem chi tiết</button>
+    <h1>Danh Sách Tiện Nghi</h1>
+    <div th:if="${!#lists.isEmpty(amenities)}">
+        <div class="grid">
+            <div class="card" th:each="b : ${amenities}">
+                <img th:src="${b.imageUrl ?: '/images/placeholder-blog.svg'}"
+                     th:alt="${b.amenityName}"
+                     onerror="this.onerror=null; this.src='/images/placeholder-blog.svg';" />
+                <div class="card-body">
+                    <h3 th:text="${b.amenityName}">Tiện Nghi</h3>
+                    <div class="card-actions">
+                        <a class="btn" th:href="@{/amenities/{id}(id=${b.amenityId})}">Xem chi tiết</a>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="pagination" th:if="${totalPages > 1}" style="margin-top:20px">
+            <a th:if="${currentPage > 0}"
+               th:href="@{|/amenities?page=${currentPage - 1}|}" class="page-btn">‹ Trước</a>
+
+            <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+               th:href="@{|/amenities?page=${i}|}"
+               th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? 'active page-btn' : 'page-btn'"></a>
+
+            <a th:if="${currentPage < totalPages - 1}"
+               th:href="@{|/amenities?page=${currentPage + 1}|}" class="page-btn">Sau ›</a>
         </div>
     </div>
     <div th:if="${#lists.isEmpty(amenities)}" style="text-align: center; color: #666; font-size: 1.2rem;">
-        Chưa có tiện ích nào.
+        Chưa có Tiện Nghi.
     </div>
 </section>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
-
 </body>
 </html>

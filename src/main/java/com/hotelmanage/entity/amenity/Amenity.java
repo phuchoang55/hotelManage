@@ -29,4 +29,7 @@ public class Amenity {
     @Column(name = "amenity_name")
     private String amenityName;
 
+    @Lob
+    @Column(name = "description", columnDefinition = "LONGTEXT")
+    String description;
 }
