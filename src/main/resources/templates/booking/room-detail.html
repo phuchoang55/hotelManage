@@ -266,7 +266,7 @@
     </div>
 
     <div class="image-gallery">
-        <img th:src="${roomType.primaryImageUrl}"
+        <img th:src="${roomType.images != null and !roomType.images.isEmpty() ? roomType.images[0].imageUrl : '/images/default-room.jpg'}"
              th:alt="${roomType.roomTypeName}"
              class="main-image"
              id="mainImage">

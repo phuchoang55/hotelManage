@@ -1,6 +1,7 @@
 package com.hotelmanage.controller.admin;
 
 import com.hotelmanage.entity.room.RoomType;
+import com.hotelmanage.repository.room.RoomTypeRepository;
 import com.hotelmanage.service.room.RoomTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,18 +26,19 @@ import java.util.List;
 public class RoomTypeController {
 
     private final RoomTypeService roomTypeService;
+    private final RoomTypeRepository roomTypeRepository;
 
     @GetMapping
     public String listRoomTypes(@RequestParam(value = "q", required = false) String query,
                                 @RequestParam(value = "page", defaultValue = "0") int page,
                                 Model model) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.ASC, "roomTypeId"));
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.ASC, "roomTypeId"));
         Page<RoomType> roomTypePage;
 
         if (query != null && !query.trim().isEmpty()) {
-            roomTypePage = roomTypeService.searchByName(query.trim(), pageable);
+            roomTypePage = roomTypeRepository.findByRoomTypeNameContainingIgnoreCaseAndDeletedAtIsNull(query.trim(), pageable);
         } else {
-            roomTypePage = roomTypeService.findAll(pageable);
+            roomTypePage = roomTypeRepository.findAll(pageable);
         }
 
         model.addAttribute("roomTypes", roomTypePage.getContent());

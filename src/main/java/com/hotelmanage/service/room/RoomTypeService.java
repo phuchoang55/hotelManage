@@ -86,11 +86,4 @@ public class RoomTypeService {
         return roomTypeRepository.findAllActive(pageable);
     }
 
-    /**
-     * Tìm kiếm loại phòng theo tên với phân trang
-     */
-    public Page<RoomType> searchByName(String keyword, Pageable pageable) {
-        return roomTypeRepository.findByRoomTypeNameContainingIgnoreCaseAndDeletedAtIsNull(
-                keyword.trim(), pageable);
-    }
 }

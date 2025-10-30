@@ -46,14 +46,6 @@
                     </button>
                 </div>
             </form>
-            <div th:if="${q}" class="mt-2">
-                <a th:href="@{/admin/room-types}" class="btn btn-sm btn-secondary">
-                    <i class="bi bi-x-circle"></i> Xóa bộ lọc
-                </a>
-                <span class="text-muted ms-2">
-                    Kết quả tìm kiếm cho: <strong th:text="${q}"></strong>
-                </span>
-            </div>
         </div>
     </div>
 
@@ -105,46 +97,24 @@
                 </table>
 
                 <!-- Pagination -->
-                <nav th:if="${totalPages > 1}" aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                            <a class="page-link" th:href="@{/admin/room-types(page=0, q=${q})}">
-                                <i class="bi bi-chevron-double-left"></i>
-                            </a>
-                        </li>
+                <div th:if="${totalPages > 1}" class="pagination" style="display:flex;gap:8px;margin-top:10px;align-items:center">
+                    <a class="btn" th:href="@{/admin/room-types(page=${currentPage > 0 ? currentPage - 1 : 0}, q=${q})}">«</a>
 
-                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                            <a class="page-link" th:href="@{/admin/room-types(page=${currentPage - 1}, q=${q})}">
-                                <i class="bi bi-chevron-left"></i>
-                            </a>
-                        </li>
+                    <th:block th:each="p : ${#numbers.sequence(1, totalPages)}">
+                        <a class="btn"
+                           th:classappend="${p == currentPage + 1 ? 'btn-primary' : ''}"
+                           th:text="${p}"
+                           th:href="@{/admin/room-types(page=${p - 1}, q=${q})}">
+                        </a>
+                    </th:block>
 
-                        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                            th:if="${i >= currentPage - 2 && i <= currentPage + 2}"
-                            class="page-item"
-                            th:classappend="${i == currentPage} ? 'active'">
-                            <a class="page-link"
-                               th:href="@{/admin/room-types(page=${i}, q=${q})}"
-                               th:text="${i + 1}"></a>
-                        </li>
+                    <a class="btn" th:href="@{/admin/room-types(page=${currentPage < totalPages - 1 ? currentPage + 1 : totalPages - 1}, q=${q})}">»</a>
 
-                        <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
-                            <a class="page-link" th:href="@{/admin/room-types(page=${currentPage + 1}, q=${q})}">
-                                <i class="bi bi-chevron-right"></i>
-                            </a>
-                        </li>
+                    <span style="margin-left:8px">
+        Trang <span th:text="${currentPage + 1}"></span>/<span th:text="${totalPages}"></span>
+    </span>
+                </div>
 
-                        <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
-                            <a class="page-link" th:href="@{/admin/room-types(page=${totalPages - 1}, q=${q})}">
-                                <i class="bi bi-chevron-double-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-
-                    <div class="text-center mt-2 text-muted">
-                        Trang <strong th:text="${currentPage + 1}"></strong> / <strong th:text="${totalPages}"></strong>
-                    </div>
-                </nav>
             </div>
         </div>
     </div>

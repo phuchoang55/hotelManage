@@ -92,11 +92,10 @@ public class BookingService {
                                       LocalDate checkOutDate,
                                       BigDecimal totalPrice,
                                       Integer promotionId,
-                                      String customerName,
-                                      String customerPhone,
+                                      String phone,
                                       String customerEmail,
-                                      String customerAddress,
-                                      String specialRequests) {
+                                      String address
+                                      ) {
 
         log.info("Creating guest booking for email: {}", customerEmail);
 
@@ -106,7 +105,7 @@ public class BookingService {
         }
 
         // Tạo/tìm guest user dựa trên email
-        User guestUser = createGuestUser(customerEmail);
+        User guestUser = createGuestUser(customerEmail, phone, address);
 
         List<Room> availableRooms = roomRepository.findAvailableRoomByRoomTypeAndDateRange(
                 roomTypeId, checkInDate, checkOutDate);
@@ -144,7 +143,7 @@ public class BookingService {
      * Tạo user guest tạm thời chỉ với email
      * User này có thể được nâng cấp lên CUSTOMER khi đăng ký tài khoản
      */
-    private User createGuestUser(String customerEmail) {
+    private User createGuestUser(String customerEmail, String phone, String address) {
         return userRepository.findByEmail(customerEmail)
                 .orElseGet(() -> {
                     User guest = User.builder()
@@ -153,6 +152,8 @@ public class BookingService {
                             .email(customerEmail)
                             .role(UserRole.GUEST)
                             .status(UserStatus.INACTIVE)
+                            .phone(phone)
+                            .address(address)
                             .build();
 
                     User saved = userRepository.save(guest);

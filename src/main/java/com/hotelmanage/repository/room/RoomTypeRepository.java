@@ -47,11 +47,5 @@ public interface RoomTypeRepository extends JpaRepository<RoomType, Integer> {
     @Query("SELECT rt FROM RoomType rt WHERE rt.deletedAt IS NULL")
     Page<RoomType> findAllActive(Pageable pageable);
 
-    /**
-     * Tìm kiếm loại phòng theo tên với phân trang
-     */
-    @Query("SELECT rt FROM RoomType rt WHERE rt.deletedAt IS NULL " +
-            "AND LOWER(rt.roomTypeName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    Page<RoomType> findByRoomTypeNameContainingIgnoreCaseAndDeletedAtIsNull(
-            @Param("keyword") String keyword, Pageable pageable);
+    Page<RoomType> findByRoomTypeNameContainingIgnoreCaseAndDeletedAtIsNull(String keyword, Pageable pageable);
 }
