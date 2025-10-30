@@ -4,6 +4,8 @@ import com.hotelmanage.entity.amenity.Amenity;
 import com.hotelmanage.repository.amenity.AmenityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,4 +69,9 @@ public class AmenityService {
         amenity.setDeletedAt(LocalDateTime.now());
         amenityRepository.save(amenity);
     }
+
+    public Page<Amenity> getAmenities(int page, int size) {
+        return amenityRepository.findByDeletedAtIsNull(PageRequest.of(page, size));
+    }
+
 }

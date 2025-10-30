@@ -181,6 +181,39 @@
                 font-size: 2rem;
             }
         }
+
+                .amenity-section .pagination {
+           display: flex;
+           justify-content: center;
+           margin-top: 30px;
+           gap: 8px;
+       }
+
+       .page-btn {
+           padding: 10px 16px;
+           background: #eee;
+           border-radius: 8px;
+           text-decoration: none;
+           color: #333;
+           font-weight: 500;
+       }
+
+       .page-btn:hover {
+           background: #f4c542;
+           color: #fff;
+       }
+
+      .page-btn.active {
+           background: #f4c542;
+           color: #fff;
+       }
+
+      .empty-msg {
+           text-align: center;
+           font-size: 18px;
+           color: #777;
+           margin-top: 40px;
+       }
     </style>
 </head>
 <body>
@@ -189,20 +222,29 @@
 
 <section>
     <h1>Tiện ích khách sạn</h1>
-    <div class="grid" th:if="${!#lists.isEmpty(amenities)}">
-        <div class="card" th:each="a : ${amenities}">
-            <img th:src="${a.image} ?: @{/images/placeholder-amenity.svg}"
-                 th:alt="${a.name}"
-                 onerror="this.onerror=null; this.src='/images/placeholder-amenity.svg';" />
-            <div class="card-body">
-                <h3 th:text="${a.name}">Tên tiện ích</h3>
-                <p class="desc" th:text="${a.desc}">Mô tả tiện ích</p>
-                <p class="time" th:if="${a.time}">
-                    <span>🕓</span>
-                    <span th:text="${a.time}">Giờ hoạt động</span>
-                </p>
-                <button class="view-btn">Xem chi tiết</button>
+    <div th:if="${!#lists.isEmpty(amenities)}">
+        <div class="grid" th:if="${!#lists.isEmpty(amenities)}">
+            <div class="card" th:each="a : ${amenities}">
+                <img th:src="${a.imageUrl} ?: @{/images/placeholder-amenity.svg}"
+                     th:alt="${a.amenityName}"
+                     onerror="this.onerror=null; this.src='/images/placeholder-amenity.svg';" />
+                <div class="card-body">
+                    <h3 th:text="${a.amenityName}">Tên tiện ích</h3>
+                    <button class="view-btn">Xem chi tiết</button>
+                </div>
             </div>
+        </div>
+        <div class="pagination" th:if="${totalPages > 1}" style="margin-top:20px">
+            <a th:if="${currentPage > 0}"
+               th:href="@{|/amenities?page=${currentPage - 1}|}" class="page-btn">‹ Trước</a>
+
+            <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+               th:href="@{|/amenities?page=${i}|}"
+               th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? 'active page-btn' : 'page-btn'"></a>
+
+            <a th:if="${currentPage < totalPages - 1}"
+               th:href="@{|/amenities?page=${currentPage + 1}|}" class="page-btn">Sau ›</a>
         </div>
     </div>
     <div th:if="${#lists.isEmpty(amenities)}" style="text-align: center; color: #666; font-size: 1.2rem;">

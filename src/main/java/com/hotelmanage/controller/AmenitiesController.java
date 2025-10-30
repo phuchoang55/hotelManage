@@ -1,26 +1,34 @@
 package com.hotelmanage.controller;
 
+import com.hotelmanage.entity.amenity.Amenity;
+import com.hotelmanage.service.amenity.AmenityService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
+@Slf4j
 @Controller
+@RequiredArgsConstructor
 public class AmenitiesController {
+    private final AmenityService amenityService;
 
     @GetMapping("/amenities")
-    public String viewAmenities(Model model) {
-        List<Map<String, String>> amenities = Arrays.asList(
-                Map.of("name", "Swimming Pool", "desc", "Open daily from 6 AM - 10 PM", "image", "/images/pool.jpg", "time", "6:00 - 22:00"),
-                Map.of("name", "Fitness Center", "desc", "Open 24 hours, fully equipped gym", "image", "/images/gym.jpg", "time", "24/7"),
-                Map.of("name", "Spa & Sauna", "desc", "Relax with premium spa and sauna services", "image", "/images/spa.jpg", "time", "8:00 - 21:00"),
-                Map.of("name", "Restaurant", "desc", "Buffet breakfast and fine dining options", "image", "/images/restaurant.jpg", "time", "7:00 - 23:00")
-        );
+    public String viewAmenities(
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        Page<Amenity> amenityPage = amenityService.getAmenities(page, 3);
 
-        model.addAttribute("amenities", amenities);
+        model.addAttribute("amenities", amenityPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", amenityPage.getTotalPages());
         return "amenities/list";
     }
 }
