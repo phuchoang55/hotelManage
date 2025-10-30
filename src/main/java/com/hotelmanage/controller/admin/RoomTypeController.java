@@ -38,7 +38,7 @@ public class RoomTypeController {
         if (query != null && !query.trim().isEmpty()) {
             roomTypePage = roomTypeRepository.findByRoomTypeNameContainingIgnoreCaseAndDeletedAtIsNull(query.trim(), pageable);
         } else {
-            roomTypePage = roomTypeRepository.findAll(pageable);
+            roomTypePage = roomTypeRepository.findAllActive(pageable);
         }
 
         model.addAttribute("roomTypes", roomTypePage.getContent());
