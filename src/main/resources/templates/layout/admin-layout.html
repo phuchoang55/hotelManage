@@ -158,7 +158,14 @@
             <li class="nav-item">
                 <a href="/admin/amenities" class="nav-link">
                     <i class="fas fa-bed"></i>
-                    <span>Manage amenity</span>
+                    <span>Manage Amenity</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="/admin/receptionists" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Manage Receptionist</span>
                 </a>
             </li>
 
@@ -228,17 +235,37 @@ const select = (el, all = false) => {
     return document.querySelector(el)
   }
 }
-    const datatables = select('.datatable', true)
+
+const datatables = select('.datatable', true)
      datatables.forEach(datatable => {
      new simpleDatatables.DataTable(datatable, {
          searchable: true,
          fixedHeight: false,
        perPageSelect: [5, 10, 15, ["All", -1]],
        columns: [
-           { select: 0, sortable: true, searchable: false },
+           { select: 0, sortable: true, searchable: true },
            { select: 1, sortable: true, searchable: true },
            { select: 2, sortable: false, searchable: false },
            { select: 3, sortable: false, searchable: false }
+         ]
+     });
+})
+
+const datatablesReceptionists = select('.datatable-receptionists', true)
+     datatablesReceptionists.forEach(datatable => {
+     new simpleDatatables.DataTable(datatable, {
+         searchable: true,
+         fixedHeight: false,
+       perPageSelect: [5, 10, 15, ["All", -1]],
+       columns: [
+           { select: 0, sortable: true, searchable: true },
+           { select: 1, sortable: true, searchable: true },
+           { select: 2, sortable: false, searchable: false },
+           { select: 3, sortable: true, searchable: true },
+           { select: 4, sortable: true, searchable: true },
+           { select: 5, sortable: true, searchable: true },
+           { select: 6, sortable: true, searchable: true },
+           { select: 7, sortable: false, searchable: false },
          ]
      });
 })
