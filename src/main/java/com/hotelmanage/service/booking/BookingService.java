@@ -32,34 +32,22 @@ public class BookingService {
     private final PromotionService promotionService;
     private final PromotionRepository promotionRepository;
 
-    /**
-     * Tạo booking mới
-     */
     public Booking createBooking(String username,
-                                 Integer roomTypeId,
+                                 Integer roomId, // Đổi tên parameter
                                  LocalDate checkInDate,
                                  LocalDate checkOutDate,
                                  BigDecimal totalPrice,
                                  Integer promotionId) {
 
-        log.info("Creating booking for user: {}, room: {}", username, roomTypeId);
+        log.info("Creating booking for user: {}, roomId: {}", username, roomId);
 
-        // Tìm user
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng!"));
 
-        // Tìm phòng available của room type
-        List<Room> availableRooms = roomRepository.findAvailableRoomByRoomTypeAndDateRange(
-                roomTypeId, checkInDate, checkOutDate);
+        // Tìm phòng theo roomId thay vì tìm available rooms
+        Room selectedRoom = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phòng!"));
 
-        if (availableRooms.isEmpty()) {
-            throw new RuntimeException("Không còn phòng trống cho loại phòng này!");
-        }
-
-        // Lấy phòng đầu tiên
-        Room selectedRoom = availableRooms.get(0);
-
-        // Tạo booking
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setRoom(selectedRoom);
@@ -68,55 +56,38 @@ public class BookingService {
         booking.setTotalPrice(totalPrice);
         booking.setStatus(BookingStatus.PENDING);
 
-        // Áp dụng promotion nếu có
         if (promotionId != null) {
             Promotion promotion = promotionService.findById(promotionId);
             booking.setPromotion(promotion);
-
-            // Tăng số lần đã sử dụng promotion
             promotionService.incrementUsedCount(promotionId);
         }
 
-        // Lưu booking
         Booking savedBooking = bookingRepository.save(booking);
-
         log.info("Booking created successfully: {}", savedBooking.getBookingId());
         return savedBooking;
     }
 
-    /**
-     * Tạo booking cho khách (guest) không đăng nhập
-     */
-    public Booking createGuestBooking(Integer roomTypeId,
+    public Booking createGuestBooking(Integer roomId, // Đổi tên parameter
                                       LocalDate checkInDate,
                                       LocalDate checkOutDate,
                                       BigDecimal totalPrice,
                                       Integer promotionId,
                                       String phone,
                                       String customerEmail,
-                                      String address
-                                      ) {
+                                      String address) {
 
-        log.info("Creating guest booking for email: {}", customerEmail);
+        log.info("Creating guest booking for email: {}, roomId: {}", customerEmail, roomId);
 
-        // Validate dates
         if (checkOutDate.isBefore(checkInDate) || checkOutDate.isEqual(checkInDate)) {
             throw new RuntimeException("Ngày trả phòng phải sau ngày nhận phòng!");
         }
 
-        // Tạo/tìm guest user dựa trên email
         User guestUser = createGuestUser(customerEmail, phone, address);
 
-        List<Room> availableRooms = roomRepository.findAvailableRoomByRoomTypeAndDateRange(
-                roomTypeId, checkInDate, checkOutDate);
+        // Tìm phòng theo roomId thay vì tìm available rooms
+        Room selectedRoom = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phòng!"));
 
-        if (availableRooms.isEmpty()) {
-            throw new RuntimeException("Không còn phòng trống!");
-        }
-
-        Room selectedRoom = availableRooms.get(0);
-
-        // Tạo booking
         Booking booking = new Booking();
         booking.setUser(guestUser);
         booking.setRoom(selectedRoom);
@@ -125,7 +96,6 @@ public class BookingService {
         booking.setTotalPrice(totalPrice);
         booking.setStatus(BookingStatus.PENDING);
 
-        // Set promotion nếu có
         if (promotionId != null) {
             Promotion promotion = promotionRepository.findById(promotionId)
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy promotion!"));

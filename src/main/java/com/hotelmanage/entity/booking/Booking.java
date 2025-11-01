@@ -3,6 +3,7 @@ package com.hotelmanage.entity.booking;
 import com.hotelmanage.entity.Enum.BookingStatus;
 import com.hotelmanage.entity.User;
 import com.hotelmanage.entity.emailNotification.EmailNotification;
+import com.hotelmanage.entity.payment.Payment;
 import com.hotelmanage.entity.room.Room;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -73,4 +74,9 @@ public class Booking {
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<EmailNotification> emailNotifications;
+
+    // Liên kết 1-N với Payment để hỗ trợ thanh toán lại
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Payment> payments;
+
 }

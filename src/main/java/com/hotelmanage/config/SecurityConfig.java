@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/login", "/register", "/restaurants/**", "/blogs/**").permitAll()
                         .requestMatchers("/booking/**", "/home", "/amenities/**").permitAll()
+                        .requestMatchers("/payment/**", "/api/payment/**").permitAll()
                         .requestMatchers("/forgot-password/**").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/js/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
