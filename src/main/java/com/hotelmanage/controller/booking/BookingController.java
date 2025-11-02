@@ -276,5 +276,21 @@ public class BookingController {
         return "redirect:/booking/search";
     }
 
+    @GetMapping("/history")
+    public String viewBookingHistory(Principal principal, Model model) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        User currentUser = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Booking> bookings = bookingRepository.findByUserId(currentUser.getId());
+
+        model.addAttribute("bookings", bookings);
+        model.addAttribute("currentUser", currentUser);
+
+        return "booking/view-booking-history";
+    }
 
 }
