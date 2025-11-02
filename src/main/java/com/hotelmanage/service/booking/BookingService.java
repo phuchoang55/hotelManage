@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -40,6 +41,7 @@ public class BookingService {
                                  Integer promotionId) {
 
         log.info("Creating booking for user: {}, roomId: {}", username, roomId);
+
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng!"));
@@ -77,6 +79,7 @@ public class BookingService {
                                       String address) {
 
         log.info("Creating guest booking for email: {}, roomId: {}", customerEmail, roomId);
+
 
         if (checkOutDate.isBefore(checkInDate) || checkOutDate.isEqual(checkInDate)) {
             throw new RuntimeException("Ngày trả phòng phải sau ngày nhận phòng!");
@@ -131,7 +134,6 @@ public class BookingService {
                     return saved;
                 });
     }
-
 
 }
 

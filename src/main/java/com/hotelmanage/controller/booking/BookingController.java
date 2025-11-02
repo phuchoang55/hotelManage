@@ -1,6 +1,6 @@
 package com.hotelmanage.controller.booking;
 
-import com.hotelmanage.entity.Enum.BookingStatus;
+
 import com.hotelmanage.entity.User;
 import com.hotelmanage.entity.booking.Booking;
 import com.hotelmanage.entity.booking.Promotion;
@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -57,6 +58,7 @@ public class BookingController {
         }
 
         model.addAttribute("currentStep", 1);
+
 
         if (checkOutDate.isBefore(checkInDate) || checkOutDate.isEqual(checkInDate)) {
             model.addAttribute("error", "Ngày trả phòng phải sau ngày nhận phòng!");
@@ -292,5 +294,6 @@ public class BookingController {
 
         return "booking/view-booking-history";
     }
+
 
 }

@@ -89,14 +89,7 @@
                     </span>
                 </div>
 
-                <!-- Nút thanh toán lại nếu CANCELLED -->
-                <div th:if="${booking.status.name() == 'CANCELED'}">
-                    <form th:action="@{/booking/payment/{id}(id=${booking.bookingId})}"
-                          method="get">
-                        <button type="submit" class="btn btn-warning">
-                            <i class="bi bi-credit-card"></i> Thanh Toán Lại
-                        </button>
-                    </form>
+                <div>
                     <small class="text-muted d-block mt-2">
                         Booking sẽ tự động hủy vĩnh viễn sau 2 phút nếu không thanh toán
                     </small>
