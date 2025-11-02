@@ -37,9 +37,6 @@ public class Payment {
     @Column(name = "transaction_id", nullable = false, length = 255)
     private String transactionId;
 
-    @Column(name = "attempt_count", nullable = false)
-    private Integer attemptCount = 1;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false, length = 20)
     private PaymentStatus paymentStatus;
@@ -49,4 +46,11 @@ public class Payment {
 
     @Transient
     private LocalDateTime expireTime;
+
+    public LocalDateTime getExpireTime() {
+        if (paymentDate == null) {
+            return null;
+        }
+        return paymentDate.plusMinutes(2);
+    }
 }
