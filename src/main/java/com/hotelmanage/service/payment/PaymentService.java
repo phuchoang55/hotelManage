@@ -11,6 +11,7 @@ import com.hotelmanage.entity.room.Room;
 import com.hotelmanage.repository.booking.BookingRepository;
 import com.hotelmanage.repository.payment.PaymentRepository;
 import com.hotelmanage.repository.room.RoomRepository;
+import com.hotelmanage.service.MailService;
 import com.hotelmanage.util.VNPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class PaymentService {
     private final BookingRepository bookingRepository;
     private final PaymentRepository paymentRepository;
     private final RoomRepository roomRepository;
-
+    private final MailService mailService;
 
     public String createPaymentUrl(Long bookingId, HttpServletRequest request)
             throws UnsupportedEncodingException {
@@ -121,6 +122,14 @@ public class PaymentService {
                 Room room = booking.getRoom();
                 room.setStatus(RoomStatus.OCCUPIED);
                 roomRepository.save(room);
+
+                // GỬI EMAIL XÁC NHẬN
+                try {
+                    mailService.sendBookingConfirmation(booking);
+                    log.info("Sent booking confirmation email to: {}", booking.getUser().getEmail());
+                } catch (Exception e) {
+                    log.error("Failed to send booking confirmation email", e);
+                }
 
                 log.info("Payment SUCCESS for booking: {}, Room {} set to OCCUPIED",
                         bookingId, room.getRoomNumber());
