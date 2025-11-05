@@ -292,6 +292,29 @@
                 height: 200px;
             }
         }
+
+        .payment-method {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .payment-method .form-check {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .payment-method .form-check:hover {
+            border-color: var(--accent-color);
+            background: white;
+        }
+
+        .payment-method .form-check-input:checked ~ .form-check-label {
+            font-weight: 600;
+        }
+
     </style>
 
 </head>
@@ -617,6 +640,88 @@
             </form>
         </div>
     </div>
+
+    <!-- Step 3: Payment -->
+    <div id="paymentSection" th:classappend="${currentStep != 3} ? 'hidden' : ''">
+        <div class="booking-card">
+            <h2 class="card-title"><i class="bi bi-credit-card"></i> Thanh Toán</h2>
+
+            <div th:if="${booking != null}">
+                <!-- Booking Summary -->
+                <div class="booking-summary mb-4">
+                    <h5 class="mb-3"><i class="bi bi-receipt"></i> Thông Tin Đặt Phòng</h5>
+                    <div class="summary-row">
+                        <span>Mã đặt phòng:</span>
+                        <strong th:text="${booking.bookingId}"></strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Loại phòng:</span>
+                        <strong th:text="${booking.room.roomType.roomTypeName}"></strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Số phòng:</span>
+                        <strong th:text="${booking.room.roomNumber}"></strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Ngày nhận phòng:</span>
+                        <strong th:text="${#temporals.format(booking.checkInDate, 'dd/MM/yyyy')}"></strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Ngày trả phòng:</span>
+                        <strong th:text="${#temporals.format(booking.checkOutDate, 'dd/MM/yyyy')}"></strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tổng tiền:</span>
+                        <strong class="text-danger"
+                                th:text="${#numbers.formatDecimal(booking.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                        </strong>
+                    </div>
+                </div>
+
+                <!-- Payment Warning -->
+                <div class="alert alert-warning mb-4">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <strong>Lưu ý quan trọng:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Booking sẽ tự động hủy sau 2 phút nếu không thanh toán</li>
+                        <li>Vui lòng hoàn tất thanh toán để xác nhận đặt phòng</li>
+                    </ul>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="mb-4">
+                    <h5 class="mb-3"><i class="bi bi-wallet2"></i> Phương Thức Thanh Toán</h5>
+                    <div class="payment-method">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod"
+                                   id="vnpay" value="vnpay" checked>
+                            <label class="form-check-label d-flex align-items-center" for="vnpay">
+                                <img src="/images/vnpay-logo.png" alt="VNPay"
+                                     style="height: 30px; margin-right: 10px;">
+                                Thanh toán qua VNPay
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Form -->
+                <form th:action="@{/booking/payment/create}" method="post">
+                    <input type="hidden" name="bookingId" th:value="${bookingId}">
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-secondary-custom"
+                                onclick="window.location.href='/booking/search'">
+                            <i class="bi bi-arrow-left"></i> Quay Về Trang Chủ
+                        </button>
+                        <button type="submit" class="btn btn-success-custom">
+                            <i class="bi bi-credit-card"></i> Thanh Toán Ngay
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
