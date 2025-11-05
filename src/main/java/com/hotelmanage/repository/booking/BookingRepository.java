@@ -19,7 +19,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.user.id = :userId ORDER BY b.createdAt DESC")
     List<Booking> findByUserId(@Param("userId") Long userId);
 
-    // Tìm booking của user theo status
-    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId AND b.status = :status ORDER BY b.createdAt DESC")
-    List<Booking> findByUserIdAndStatus(@Param("userId") Long userId, @Param("status") BookingStatus status);
+    @Query("SELECT b FROM Booking b WHERE b.status = :status AND b.createdAt < :expiryTime")
+    List<Booking> findExpiredPendingBookings(@Param("status") BookingStatus status,
+                                             @Param("expiryTime") LocalDateTime expiryTime);
+
+
 }

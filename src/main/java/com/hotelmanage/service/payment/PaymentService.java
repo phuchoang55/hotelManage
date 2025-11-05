@@ -15,6 +15,7 @@ import com.hotelmanage.util.VNPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -190,28 +191,42 @@ public class PaymentService {
         return ipAddress != null ? ipAddress : request.getRemoteAddr();
     }
 
+
+    @Scheduled(fixedRate = 30000) // 30 seconds
     @Transactional
-    public void checkAndCancelExpiredPayment(Long bookingId) {
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking không tồn tại"));
+    public void cancelExpiredPendingBookings() {
+        try {
+            LocalDateTime expiryTime = LocalDateTime.now().minusMinutes(2);
 
-        Payment latestPayment = paymentRepository.findLatestByBooking(booking)
-                .orElse(null);
+            List<Booking> expiredBookings = bookingRepository.findExpiredPendingBookings(
+                    BookingStatus.PENDING, expiryTime);
 
-        if (latestPayment != null && latestPayment.getPaymentStatus() == PaymentStatus.PENDING) {
-            LocalDateTime expireTime = latestPayment.getExpireTime();
+            if (!expiredBookings.isEmpty()) {
+                for (Booking booking : expiredBookings) {
+                    // Cập nhật payment status thành FAILED
+                    Payment latestPayment = paymentRepository.findLatestByBooking(booking)
+                            .orElse(null);
 
-            if (expireTime != null && LocalDateTime.now().isAfter(expireTime)) {
-                latestPayment.setPaymentStatus(PaymentStatus.FAILED);
-                paymentRepository.save(latestPayment);
+                    if (latestPayment != null && latestPayment.getPaymentStatus() == PaymentStatus.PENDING) {
+                        latestPayment.setPaymentStatus(PaymentStatus.FAILED);
+                        paymentRepository.save(latestPayment);
+                    }
 
-                booking.setStatus(BookingStatus.CANCELLED_PERMANENTLY);
-                bookingRepository.save(booking);
+                    // Hủy booking vĩnh viễn
+                    booking.setStatus(BookingStatus.CANCELLED_PERMANENTLY);
+                    bookingRepository.save(booking);
 
-                log.warn("Payment expired for booking: {} - Status: CANCELLED_PERMANENTLY", bookingId);
+                    log.info("Auto-cancelled expired booking: {} (created at: {})",
+                            booking.getBookingId(), booking.getCreatedAt());
+                }
+
+                log.info("Cancelled {} expired pending bookings", expiredBookings.size());
             }
+        } catch (Exception e) {
+            log.error("Error cancelling expired pending bookings", e);
         }
     }
+
 
 }
 
