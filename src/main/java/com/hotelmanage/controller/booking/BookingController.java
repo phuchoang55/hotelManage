@@ -182,7 +182,6 @@ public class BookingController {
                                  @RequestParam(required = false) String customerPhone,
                                  @RequestParam(required = false) String customerEmail,
                                  @RequestParam(required = false) String customerAddress,
-                                 @RequestParam(required = false) String specialRequests,
                                  Principal principal,
                                  RedirectAttributes redirectAttributes) {
 
