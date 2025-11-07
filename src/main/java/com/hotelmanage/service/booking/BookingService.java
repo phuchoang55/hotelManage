@@ -117,11 +117,25 @@ public class BookingService {
      * User này có thể được nâng cấp lên CUSTOMER khi đăng ký tài khoản
      */
     private User createGuestUser(String customerEmail, String phone, String address) {
+        // Kiểm tra email đã tồn tại
         return userRepository.findByEmail(customerEmail)
+                .map(existingUser -> {
+                    // Nếu email đã tồn tại với role CUSTOMER hoặc ADMIN
+                    if (existingUser.getRole() == UserRole.CUSTOMER ||
+                            existingUser.getRole() == UserRole.ADMIN || existingUser.getRole() == UserRole.RECEPTIONIST) {
+                        throw new RuntimeException("Email này đã được đăng ký. Vui lòng đăng nhập để đặt phòng!");
+                    }
+                    // Nếu là GUEST cũ, cập nhật thông tin
+                    existingUser.setPhone(phone);
+                    existingUser.setAddress(address);
+                    log.info("Updated existing guest user with email: {}", customerEmail);
+                    return userRepository.save(existingUser);
+                })
                 .orElseGet(() -> {
+                    // Tạo user guest mới
                     User guest = User.builder()
                             .username("guest_" + customerEmail.split("@")[0] + "_" + System.currentTimeMillis())
-                            .password("") // Password trống
+                            .password("")
                             .email(customerEmail)
                             .role(UserRole.GUEST)
                             .status(UserStatus.INACTIVE)
@@ -134,6 +148,7 @@ public class BookingService {
                     return saved;
                 });
     }
+
 
 }
 
