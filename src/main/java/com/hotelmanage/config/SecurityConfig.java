@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/booking/**", "/home", "/amenities/**").permitAll()
                         .requestMatchers("/payment/**", "/api/payment/**").permitAll()
                         .requestMatchers("/forgot-password/**").permitAll()
+                        .requestMatchers("/room-types/**").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/js/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
                 )

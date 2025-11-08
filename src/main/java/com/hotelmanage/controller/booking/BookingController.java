@@ -24,6 +24,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -182,7 +183,6 @@ public class BookingController {
                                  @RequestParam(required = false) String customerPhone,
                                  @RequestParam(required = false) String customerEmail,
                                  @RequestParam(required = false) String customerAddress,
-                                 @RequestParam(required = false) String specialRequests,
                                  Principal principal,
                                  RedirectAttributes redirectAttributes) {
 
@@ -281,7 +281,8 @@ public class BookingController {
     @GetMapping("/history")
     public String viewBookingHistory(Principal principal, Model model) {
         if (principal == null) {
-            return "redirect:/login";
+            model.addAttribute("bookings", Collections.emptyList());
+            return "booking/view-booking-history";
         }
 
         User currentUser = userRepository.findByUsername(principal.getName())

@@ -14,15 +14,13 @@
     <div class="logo">Hoi An Hotel</div>
     <nav>
         <a th:href="@{/}">TRANG CHỦ</a>
-        <a href="#roomtype">HẠNG PHÒNG</a>
+        <a href="/room-types">HẠNG PHÒNG</a>
         <a href="/restaurants">ẨM THỰC</a>
         <a href="/amenities">TIỆN NGHI</a>
         <a href="/blogs">Blog</a>
-        <li class="nav-item" th:if="${#authentication.principal != 'anonymousUser'}">
-            <a class="nav-link" th:href="@{/booking/history}">
+        <a class="nav-link" th:href="@{/booking/history}">
                 <i class="bi bi-clock-history"></i> Lịch Sử Đặt Phòng
-            </a>
-        </li>
+        </a>
         <a href="/booking/search" class="btn-primary">ĐẶT PHÒNG</a>
 
         <div class="auth">

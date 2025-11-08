@@ -64,28 +64,7 @@ ORDER BY r.roomNumber ASC
       )
 """)
     Page<Room> searchActiveRooms(@Param("keyword") String keyword, Pageable pageable);
-    /**
-     * Tìm theo room type
-     */
-    List<Room> findByRoomType_RoomTypeIdAndDeletedAtIsNull(Integer roomTypeId);
 
-    /**
-     * Tìm theo status
-     */
-    List<Room> findByStatusAndDeletedAtIsNull(RoomStatus status);
 
-    /**
-     * Kiểm tra room number tồn tại
-     */
-    boolean existsByRoomNumberAndDeletedAtIsNull(String roomNumber);
 
-    /**
-     * Đếm số phòng theo room type
-     */
-    long countByRoomType_RoomTypeIdAndDeletedAtIsNull(Integer roomTypeId);
-
-    /**
-     * Đếm số phòng theo status
-     */
-    long countByStatusAndDeletedAtIsNull(RoomStatus status);
 }
