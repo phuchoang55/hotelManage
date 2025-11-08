@@ -39,6 +39,9 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
             @Param("roomTypeId") Integer roomTypeId,
             @Param("checkInDate") LocalDate checkInDate,
             @Param("checkOutDate") LocalDate checkOutDate);
+    /**
+     * Tìm phòng bằng keyword
+     */
     @Query("""
 SELECT r FROM Room r
 WHERE r.deletedAt IS NULL
@@ -51,19 +54,21 @@ ORDER BY r.roomNumber ASC
 """)
     List<Room> searchRooms(@Param("keyword") String keyword);
 
-    @Query("SELECT r FROM Room r WHERE r.deletedAt IS NULL")
-    Page<Room> findAllActive(Pageable pageable);
+    Page<Room> findAllByDeletedAtIsNull(Pageable pageable);
 
     @Query("""
-    SELECT r FROM Room r
-    WHERE r.deletedAt IS NULL
-      AND (
-        LOWER(r.roomNumber) LIKE LOWER(CONCAT('%', :keyword, '%'))
-        OR LOWER(r.roomType.roomTypeName) LIKE LOWER(CONCAT('%', :keyword, '%'))
-        OR LOWER(r.status) LIKE LOWER(CONCAT('%', :keyword, '%'))
-      )
+SELECT r FROM Room r
+WHERE r.deletedAt IS NULL
+AND (
+    LOWER(r.roomNumber) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    OR LOWER(r.roomType.roomTypeName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    OR LOWER(r.status) LIKE LOWER(CONCAT('%', :keyword, '%'))
+)
+ORDER BY r.roomNumber ASC
 """)
-    Page<Room> searchActiveRooms(@Param("keyword") String keyword, Pageable pageable);
+    Page<Room> searchRooms(@Param("keyword") String keyword, Pageable pageable);
+
+
     /**
      * Tìm theo room type
      */

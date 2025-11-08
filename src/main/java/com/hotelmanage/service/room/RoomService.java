@@ -5,6 +5,9 @@ import com.hotelmanage.entity.room.Room;
 import com.hotelmanage.repository.room.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,8 +15,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
 
     /**
-     *  Tìm phòng còn trống theo loại phòng và khoảng thời gian
+     * Tìm phòng còn trống theo loại phòng và khoảng thời gian
      */
     public Room findAvailableRoom(Integer roomTypeId, LocalDate checkInDate, LocalDate checkOutDate) {
         log.info("Finding available room for roomType={}, checkIn={}, checkOut={}",
@@ -38,7 +39,6 @@ public class RoomService {
                         "Không tìm thấy phòng trống cho loại phòng này trong thời gian đã chọn!"));
     }
 
-
     /**
      * Lấy tất cả các phòng chưa bị xóa
      */
@@ -48,6 +48,25 @@ public class RoomService {
                 .stream()
                 .filter(room -> room.getDeletedAt() == null)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Phân trang danh sách phòng
+     */
+    public Page<Room> findPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return roomRepository.findAllByDeletedAtIsNull(pageable);
+    }
+
+    /**
+     * Tìm kiếm phòng có phân trang
+     */
+    public Page<Room> searchRooms(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return roomRepository.findAllByDeletedAtIsNull(pageable);
+        }
+        return roomRepository.searchRooms(keyword.trim(), pageable);
     }
 
     /**
@@ -92,15 +111,4 @@ public class RoomService {
         room.setDeletedAt(LocalDateTime.now());
         roomRepository.save(room);
     }
-    public List<Room> searchRooms(String keyword) {
-        log.info("Searching rooms with keyword: {}", keyword);
-        if (keyword == null || keyword.trim().isEmpty()) {
-            return findAll();
-        }
-        return roomRepository.searchRooms(keyword.trim());
-    }
-
-
-
-
 }
