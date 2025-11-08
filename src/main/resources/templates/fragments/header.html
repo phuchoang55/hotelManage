@@ -25,6 +25,7 @@
 
         <div class="auth">
             <span sec:authorize="isAuthenticated()">Xin chào, <b sec:authentication="name"></b></span>
+            <a sec:authorize="isAuthenticated()" class="btn" th:href="@{/profile}">Hồ sơ</a>
             <a sec:authorize="!isAuthenticated()" class="btn" th:href="@{/login}">Đăng nhập</a>
             <a sec:authorize="!isAuthenticated()" class="btn" th:href="@{/register}">Đăng ký</a>
             <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display: inline;">
