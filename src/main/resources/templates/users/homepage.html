@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
         * {
             margin: 0;
@@ -425,6 +427,65 @@
             font-size: 0.9rem;
         }
 
+        /* --- ROOM SLIDER --- */
+        .room-slider {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: center;
+        }
+
+        .room-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .room {
+            display: none;
+            transition: opacity 0.5s ease-in-out;
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .room.active {
+            display: block;
+        }
+
+        .room img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .room-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background-color: #f9c74f;
+            border: none;
+            color: #000;
+            padding: 10px 16px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover {
+            background-color: #d4a017;
+        }
+
+
         @media (max-width: 1024px) {
             .dining-container {
                 grid-template-columns: 1fr;
@@ -547,25 +608,44 @@
 
 <section class="rooms" id="rooms">
     <h2>Phòng nghỉ</h2>
-    <div class="grid">
-        <div class="room">
-            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80" alt="Phòng Deluxe sang trọng">
-            <h3>Phòng Deluxe</h3>
+    <div class="room-slider">
+
+        <div class="room-container">
+            <div class="room" th:each="roomType, iterStat : ${roomTypes}"
+                 th:classappend="${iterStat.index == 0} ? ' active' : ''">
+                <img th:if="${roomType.images != null and !roomType.images.isEmpty()}"
+                     th:src="${roomType.images[0].imageUrl}"
+                     th:alt="${roomType.roomTypeName}">
+                <img th:if="${roomType.images == null or roomType.images.isEmpty()}"
+                     src="https://via.placeholder.com/400"
+                     th:alt="${roomType.roomTypeName}">
+
+                <h3 th:text="${roomType.roomTypeName}"></h3>
+                <p th:text="${roomType.description}"></p>
+                <p>
+                    <strong>Sức chứa:</strong>
+                    <span th:text="${roomType.amountPerson}"></span> người
+                </p>
+                <p>
+                    <strong>Giá:</strong>
+                    <span th:text="${#numbers.formatDecimal(roomType.price, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ / đêm
+                </p>
+            </div>
         </div>
 
-        <div class="room">
-            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80" alt="Phòng Suite cao cấp có ban công">
-            <h3>Phòng Suite</h3>
+        <div class="room-navigation">
+            <button class="nav-btn prev-btn">&#10094;</button>
+            <button class="nav-btn next-btn">&#10095;</button>
         </div>
 
-        <div class="room">
-            <img src="https://images.unsplash.com/photo-1568495248636-6432b97bd949?auto=format&fit=crop&w=1600&q=80" alt="Phòng Gia đình rộng rãi ấm cúng">
-            <h3>Phòng Gia đình</h3>
-        </div>
     </div>
 </section>
 
-<!-- DINING SECTION - UPDATED LAYOUT -->
+
+
+
+
+
 <section class="dining" id="dining">
     <div class="dining-container">
         <div class="dining-image">
@@ -580,7 +660,7 @@
     </div>
 </section>
 
-<!-- AMENITIES SECTION - UPDATED LAYOUT -->
+
 <section class="amenities" id="amenities">
     <div class="amenities-container">
         <div class="amenities-content">
@@ -641,6 +721,26 @@
         const checkInDate = this.value;
         document.getElementById('checkOutDate')?.setAttribute('min', checkInDate);
     });
+    // Room slider navigation
+    const rooms = document.querySelectorAll(".room");
+    let currentRoomIndex = 0;
+
+    function showRoom(index) {
+        rooms.forEach((room, i) => {
+            room.classList.toggle("active", i === index);
+        });
+    }
+
+    document.querySelector(".next-btn")?.addEventListener("click", () => {
+        currentRoomIndex = (currentRoomIndex + 1) % rooms.length;
+        showRoom(currentRoomIndex);
+    });
+
+    document.querySelector(".prev-btn")?.addEventListener("click", () => {
+        currentRoomIndex = (currentRoomIndex - 1 + rooms.length) % rooms.length;
+        showRoom(currentRoomIndex);
+    });
+
 </script>
 </body>
 </html>
