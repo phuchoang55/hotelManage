@@ -47,6 +47,10 @@ public class SecurityConfig {
                         .requestMatchers("/forgot-password/**").permitAll()
                         .requestMatchers("/room-types/**").permitAll()
                         .requestMatchers("/css/**", "/images/**", "/js/**", "/webjars/**").permitAll()
+                        // Admin only
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // Receptionist
+                        .requestMatchers("/reception/**").hasAnyRole("RECEPTIONIST")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
