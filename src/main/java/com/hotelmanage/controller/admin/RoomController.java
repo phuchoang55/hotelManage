@@ -6,13 +6,12 @@ import com.hotelmanage.service.room.RoomTypeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -23,12 +22,31 @@ public class RoomController {
     private final RoomService roomService;
     private final RoomTypeService roomTypeService;
 
+
     @GetMapping
-    public String listRooms(Model model) {
-        List<Room> rooms = roomService.findAll();
-        model.addAttribute("rooms", rooms);
+    public String listRooms(@RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "5") int size,
+                            Model model) {
+        Page<Room> roomPage = roomService.findPaginated(page, size);
+        model.addAttribute("rooms", roomPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", roomPage.getTotalPages());
         return "admin/room-list";
     }
+
+    @GetMapping("/search")
+    public String searchRooms(@RequestParam("keyword") String keyword,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "5") int size,
+                              Model model) {
+        Page<Room> roomPage = roomService.searchRooms(keyword, page, size);
+        model.addAttribute("rooms", roomPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", roomPage.getTotalPages());
+        model.addAttribute("keyword", keyword);
+        return "admin/room-list";
+    }
+
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
@@ -55,6 +73,7 @@ public class RoomController {
             return "redirect:/admin/rooms/create";
         }
     }
+
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Integer id, Model model) {
@@ -85,7 +104,6 @@ public class RoomController {
         }
     }
 
-
     @PostMapping("/delete/{id}")
     public String deleteRoom(@PathVariable Integer id,
                              RedirectAttributes redirectAttributes) {
@@ -97,12 +115,4 @@ public class RoomController {
         }
         return "redirect:/admin/rooms";
     }
-    @GetMapping("/search")
-    public String searchRooms(@RequestParam("keyword") String keyword, Model model) {
-        List<Room> rooms = roomService.searchRooms(keyword);
-        model.addAttribute("rooms", rooms);
-        model.addAttribute("keyword", keyword);
-        return "admin/room-list";
-    }
-
 }
