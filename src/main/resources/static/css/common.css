@@ -97,3 +97,33 @@ body {
         padding: 10px 20px;
     }
 }
+
+#navbar .auth .user-menu {
+    padding: 8px 15px;
+    background: #f9c74f;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    min-width: 150px;
+    max-width: 200px;
+}
+
+#navbar .auth .user-menu option {
+    background: white;
+    color: #333;
+}
+
+/* Đảm bảo nav không bị xuống dòng */
+#navbar nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+#navbar nav a {
+    white-space: nowrap;
+}
+

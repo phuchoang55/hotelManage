@@ -18,15 +18,20 @@
         <a href="/restaurants">ẨM THỰC</a>
         <a href="/amenities">TIỆN NGHI</a>
         <a href="/blogs">Blog</a>
-        <a href="/feedback">GÓP Ý</a>
         <a class="nav-link" th:href="@{/booking/history}">
                 <i class="bi bi-clock-history"></i> Lịch Sử Đặt Phòng
         </a>
         <a href="/booking/search" class="btn-primary">ĐẶT PHÒNG</a>
 
         <div class="auth">
-            <span sec:authorize="isAuthenticated()">Xin chào, <b sec:authentication="name"></b></span>
-            <a sec:authorize="isAuthenticated()" class="btn" th:href="@{/profile}">Hồ sơ</a>
+            <select sec:authorize="isAuthenticated()" class="btn user-menu" onchange="if(this.value) window.location.href=this.value;">
+                <option value="" selected>
+                    Xin chào, <span sec:authentication="name"></span>
+                </option>
+                <option th:value="@{/profile}">Hồ sơ</option>
+                <option value="/feedback">Góp ý</option>
+            </select>
+
             <a sec:authorize="!isAuthenticated()" class="btn" th:href="@{/login}">Đăng nhập</a>
             <a sec:authorize="!isAuthenticated()" class="btn" th:href="@{/register}">Đăng ký</a>
             <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display: inline;">
