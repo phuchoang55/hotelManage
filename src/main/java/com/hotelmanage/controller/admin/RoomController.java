@@ -22,7 +22,7 @@ public class RoomController {
     private final RoomService roomService;
     private final RoomTypeService roomTypeService;
 
-
+    /** Danh sách phòng */
     @GetMapping
     public String listRooms(@RequestParam(defaultValue = "0") int page,
                             @RequestParam(defaultValue = "5") int size,
@@ -34,6 +34,7 @@ public class RoomController {
         return "admin/room-list";
     }
 
+    /** Tìm kiếm phòng */
     @GetMapping("/search")
     public String searchRooms(@RequestParam("keyword") String keyword,
                               @RequestParam(defaultValue = "0") int page,
@@ -47,7 +48,7 @@ public class RoomController {
         return "admin/room-list";
     }
 
-
+    /** Hiển thị form thêm mới phòng */
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("room", new Room());
@@ -55,6 +56,7 @@ public class RoomController {
         return "admin/room-form";
     }
 
+    /** Xử lý thêm mới phòng */
     @PostMapping("/create")
     public String createRoom(@Valid @ModelAttribute("room") Room room,
                              BindingResult result,
@@ -69,20 +71,28 @@ public class RoomController {
             redirectAttributes.addFlashAttribute("success", "Thêm phòng thành công!");
             return "redirect:/admin/rooms";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Lỗi: " + e.getMessage());
-            return "redirect:/admin/rooms/create";
+            log.error("Error creating room: {}", e.getMessage());
+            model.addAttribute("roomTypes", roomTypeService.findAll());
+            model.addAttribute("error", "Lỗi: " + e.getMessage());
+            return "admin/room-form";
         }
     }
 
-
+    /** Hiển thị form chỉnh sửa phòng */
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Integer id, Model model) {
-        Room room = roomService.findById(id);
-        model.addAttribute("room", room);
-        model.addAttribute("roomTypes", roomTypeService.findAll());
-        return "admin/room-form";
+    public String showEditForm(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            Room room = roomService.findById(id);
+            model.addAttribute("room", room);
+            model.addAttribute("roomTypes", roomTypeService.findAll());
+            return "admin/room-form";
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/admin/rooms";
+        }
     }
 
+    /** Cập nhật thông tin phòng */
     @PostMapping("/update/{id}")
     public String updateRoom(@PathVariable Integer id,
                              @Valid @ModelAttribute("room") Room room,
@@ -99,19 +109,23 @@ public class RoomController {
             redirectAttributes.addFlashAttribute("success", "Cập nhật phòng thành công!");
             return "redirect:/admin/rooms";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Lỗi: " + e.getMessage());
-            return "redirect:/admin/rooms/edit/" + id;
+            log.error("Error updating room: {}", e.getMessage());
+            model.addAttribute("roomTypes", roomTypeService.findAll());
+            model.addAttribute("error", "Lỗi: " + e.getMessage());
+            return "admin/room-form";
         }
     }
 
+    /** Xóa mềm phòng (đánh dấu deleted_at) */
     @PostMapping("/delete/{id}")
     public String deleteRoom(@PathVariable Integer id,
                              RedirectAttributes redirectAttributes) {
         try {
             roomService.delete(id);
-            redirectAttributes.addFlashAttribute("success", "Đã xóa phòng thành công!");
+            redirectAttributes.addFlashAttribute("success", "Xóa phòng thành công (đã đánh dấu deleted_at).");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            log.error("Error deleting room: {}", e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Lỗi: " + e.getMessage());
         }
         return "redirect:/admin/rooms";
     }
