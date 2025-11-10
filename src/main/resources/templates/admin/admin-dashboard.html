@@ -126,6 +126,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border: 1px solid #e0e0e0;
             transition: transform 0.2s ease;
+            position: relative;
         }
 
         .card:hover {
@@ -144,6 +145,70 @@
             color: #333;
             font-size: 32px;
             font-weight: bold;
+        }
+
+        /* Loading State */
+        .card.loading .card-number {
+            opacity: 0.5;
+        }
+
+        .card .loading-spinner {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .card.loading .loading-spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Error State */
+        .error-message {
+            display: none;
+            background-color: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #fcc;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Refresh Button */
+        .refresh-button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .refresh-button:hover {
+            background-color: #555;
+        }
+
+        .refresh-button i {
+            margin-right: 5px;
         }
 
         /* Content Area Styling */
@@ -184,7 +249,7 @@
             }
         }
 
-        /* Mobile menu toggle (for future enhancement) */
+        /* Mobile menu toggle */
         .menu-toggle {
             display: none;
             background: none;
@@ -230,7 +295,6 @@
                     <span>Manage room type</span>
                 </a>
             </li>
-
 
             <li class="nav-item">
                 <a href="/admin/rooms" class="nav-link">
@@ -296,22 +360,32 @@
             <!-- Dashboard Content -->
             <div id="dashboard" class="content-section active">
                 <h1>Dashboard Overview</h1>
+
+                <!-- Error Message -->
+                <div id="errorMessage" class="error-message">
+                    <strong>Error:</strong> <span id="errorText"></span>
+                </div>
+
                 <div class="dashboard-cards">
-                    <div class="card">
+                    <div class="card" id="roomCard">
+                        <div class="loading-spinner"></div>
                         <h3>Total Rooms</h3>
-                        <p class="card-number">25</p>
+                        <p class="card-number" id="totalRooms">-</p>
                     </div>
-                    <div class="card">
+                    <div class="card" id="userCard">
+                        <div class="loading-spinner"></div>
                         <h3>Active Users</h3>
-                        <p class="card-number">142</p>
+                        <p class="card-number" id="activeUsers">-</p>
                     </div>
-                    <div class="card">
+                    <div class="card" id="bookingCard">
+                        <div class="loading-spinner"></div>
                         <h3>Total Bookings</h3>
-                        <p class="card-number">89</p>
+                        <p class="card-number" id="totalBookings">-</p>
                     </div>
-                    <div class="card">
+                    <div class="card" id="revenueCard">
+                        <div class="loading-spinner"></div>
                         <h3>Revenue</h3>
-                        <p class="card-number">$12,450</p>
+                        <p class="card-number" id="totalRevenue">-</p>
                     </div>
                 </div>
             </div>
@@ -368,37 +442,26 @@
 </div>
 
 <script>
-    function showContent(sectionId, element) {
-        // Hide all content sections
-        const sections = document.querySelectorAll('.content-section');
-        sections.forEach(section => {
-            section.classList.remove('active');
-        });
-
-        // Remove active class from all nav items
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            item.classList.remove('active');
-        });
-
-        // Show selected content section
-        document.getElementById(sectionId).classList.add('active');
-
-        // Add active class to clicked nav item
-        element.parentElement.classList.add('active');
-
-        // Prevent default anchor behavior
-        event.preventDefault();
+    function formatNumber(num) {
+        return num != null ? num.toLocaleString('en-US') : '0';
     }
 
-    // Set initial active state
-    document.addEventListener('DOMContentLoaded', function() {
-        const dashboardSection = document.getElementById('dashboard');
-        const dashboardNavItem = document.querySelector('.nav-item');
+    function formatCurrency(amount) {
+        return amount != null ? 'VND' + parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 2 }) : 'VND0.00';
+    }
 
-        dashboardSection.classList.add('active');
-        dashboardNavItem.classList.add('active');
-    });
+    async function loadDashboardStats() {
+        const response = await fetch('/api/dashboard/stats', { credentials: 'include' });
+        if (response.ok) {
+            const stats = await response.json();
+            document.getElementById('totalRooms').textContent = formatNumber(stats.totalRooms);
+            document.getElementById('activeUsers').textContent = formatNumber(stats.activeUsers);
+            document.getElementById('totalBookings').textContent = formatNumber(stats.totalBookings);
+            document.getElementById('totalRevenue').textContent = formatCurrency(stats.totalRevenue);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadDashboardStats);
 </script>
 </body>
 </html>

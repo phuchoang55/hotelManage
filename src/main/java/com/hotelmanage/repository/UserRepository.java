@@ -24,4 +24,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.role = 'RECEPTIONIST' AND u.deletedAt is null")
     List<User> findReceptionists();
 
+    // Dashboard queries
+    @Query("SELECT COUNT(u) FROM User u WHERE u.status = 'ACTIVE' AND u.role != 'GUEST' AND u.deletedAt IS NULL")
+    Long countActiveUsers();
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'CUSTOMER' AND u.status = 'ACTIVE' AND u.deletedAt IS NULL")
+    Long countActiveCustomers();
+
 }

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,5 +32,23 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT b FROM Booking b WHERE CAST(b.bookingId AS string) LIKE %:bookingId% ORDER BY b.createdAt DESC")
     Page<Booking> findBookingsByBookingIdContaining(@Param("bookingId") String bookingId, Pageable pageable);
+
+    @Query("SELECT COUNT(b) FROM Booking b")
+    Long countTotalBookings();
+
+    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b WHERE b.status = 'CONFIRMED'")
+    BigDecimal calculateTotalRevenue();
+
+    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
+            "WHERE b.status = 'CONFIRMED' " +
+            "AND YEAR(b.createdAt) = :year AND MONTH(b.createdAt) = :month")
+    BigDecimal calculateMonthlyRevenue(@Param("year") int year, @Param("month") int month);
+
+    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
+            "WHERE b.status = 'CONFIRMED' " +
+            "AND b.createdAt >= :startDate AND b.createdAt <= :endDate")
+    BigDecimal calculateRevenueByDateRange(@Param("startDate") LocalDateTime startDate,
+                                           @Param("endDate") LocalDateTime endDate);
+
 
 }
