@@ -161,7 +161,7 @@ public class PaymentService {
         payment.setPaymentStatus(PaymentStatus.PENDING);
         // Tạo transactionId tạm thời duy nhất
         payment.setTransactionId("PENDING_" + booking.getBookingId() + "_" + System.currentTimeMillis());
-        payment.setExpireTime(LocalDateTime.now().plusMinutes(2));
+        payment.setExpireTime(LocalDateTime.now().plusMinutes(15));
         return paymentRepository.save(payment);
     }
 
@@ -188,7 +188,7 @@ public class PaymentService {
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         vnp_Params.put("vnp_CreateDate", formatter.format(cld.getTime()));
 
-        cld.add(Calendar.MINUTE, 2);
+        cld.add(Calendar.MINUTE, 15);
         vnp_Params.put("vnp_ExpireDate", formatter.format(cld.getTime()));
 
         String queryUrl = VNPayUtil.hashAllFields(vnp_Params, vnPayConfig.getVnpHashSecret());
@@ -205,7 +205,7 @@ public class PaymentService {
     @Transactional
     public void cancelExpiredPendingBookings() {
         try {
-            LocalDateTime expiryTime = LocalDateTime.now().minusMinutes(2);
+            LocalDateTime expiryTime = LocalDateTime.now().minusMinutes(15);
 
             List<Booking> expiredBookings = bookingRepository.findExpiredPendingBookings(
                     BookingStatus.PENDING, expiryTime);
